@@ -1,0 +1,18 @@
+
+
+# proc doStuff(jnob:JsonNode)
+#   # ??????
+#   echo jnob
+#   type(jnob)
+#   echo "-------------------------"
+#   var fieldta = jnob["radio-set-example"].getFields()
+#   var radiosetsq = fieldta["radio-set-example"].getElems()
+#   echo radiosetsq
+#   echo "--------------------"
+#   var obta: OrderedTable[system.string, json.JsonNode]
+
+#   for elem in radiosetsq:
+#     obta = elem.getFields()
+#     for key, val in obta:
+#       echo key & " = " & $val
+

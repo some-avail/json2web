@@ -1,0 +1,19 @@
+# Trick to ignore files without extensions (compilates)
+# Ignore all
+*
+# Unignore all with extensions
+!*.*
+# Unignore all dirs
+!*/
+
+*.swp
+*sublime*
+*bluefish*
+mostfiles/oud/
+mostfiles/tydl/
+mostfiles/flashread.*
+mostfiles/jo_htmlgen.nim
+mostfiles/webgui_def.nim
+*~
+
+

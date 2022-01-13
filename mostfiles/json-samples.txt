@@ -1,0 +1,59 @@
+Geldig:
+
+-------------------------------
+{
+  "controls-webcontrols":
+  {
+    "project-properties":
+    {
+      "p-description": "Project to showcase all controls generatable from a json-file.",
+      "p-version": 0.1
+    }
+  },
+ 
+    "web-elements":
+    {
+      "radio-button-sets":
+      {
+        "radio-set-example":
+        [
+          {"name":"rbut1","lab":"this is button one","selected":true},
+          {"name":"rbut2","lab":"this is button two","selected":false}
+        ]
+      },
+      
+        "orders":
+        [
+        ]
+      }
+    }
+
+-----------------------------
+{
+  "name": "Isaac",
+  "books": ["Robot Dreams"],
+  "details": {
+    "age": 35,
+    "pi": 3.1415
+  }
+}
+
+=========================================================
+Ongeldig:
+
+
+
+
+=========================================================
+Snippers:
+
+      "tip-one": "double key",
+      "p-version": "double",
+      "tip-one": "triple"
+
+
+              {"name":"pasteclip","lab":"Paste from the clipboard","selected":true},
+              {"name":"transfer","lab":"Transfer belonging text","selected":false},
+              {"name":"frequencies","lab":"Reformat transferred text","selected":false},
+              {"name":"process_text","lab":"Reformat transferred text","selected":false}
+
