@@ -1,0 +1,5 @@
+
+Dia-files can edited and viewed with the open-source 
+flow-chart program Dia.
+It can be gotten from your local repo (linux) or from:
+https://sourceforge.net/projects/dia-installer/
