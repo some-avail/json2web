@@ -10,25 +10,17 @@
   This module is currently used as generic module, that is not 
   project-specific. The other two configs are project-specific (future).
 
-  Below jsonnode-object variable has been given the 
-  pragma {.threadvar.} to enable multi-threading. Without this pragma
-  global vars are not allowed to be compiled with --threads:on
-  Unfortunately --Threads:on compiles but crashes with sigsegv
+
   ]#
 
 
 
 import json
 
-var versionfl: float = 0.1
-
-var project_prefikst*: string
-# var gui_jnob* {.threadvar.}: JsonNode
-var gui_jnob*: JsonNode
+var versionfl: float = 0.2
 
 
-proc setGuiJsonNode*() =
-  var filest = project_prefikst & "_gui.json"
+proc getGuiJsonNode*(proj_prefikst: string): JsonNode = 
+  var filest = proj_prefikst & "_gui.json"
   echo filest
-  gui_jnob = parseFile(filest)
-
+  result = parseFile(filest)

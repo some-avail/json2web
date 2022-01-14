@@ -10,29 +10,38 @@ in either of two variables (i dont know if they are fully equivalent):
 * variables like @"controlname"
 * request.params["controlname"]
 
-Do not use global vars unless you give them the pragma {.threadvar.} or otherwise
-you can not compile for multi-threading with switch --threads:on
+Do not use global vars  or otherwise you can not compile for multi-threading
+with switch --threads:on
+The trick is to put your globals in a proc thence they are no globals 
+anymore. But: see below...
 See also the module g_static_config.nim
-Currently --threads:on compiles but crashes with sigsegv.
-
+Currently --threads :on compiles and runs succesfully.
 
 
 
 ADAP HIS
+-change static_config and calls
 
 ADAP NOW
+-x problem: multi-user situations create still shared data concerning the 
+json-def-file if it is changed on the fly (which will be by design).
+  x solution: spawn a unique copy of a template with a random-number
+  appended to the file.
+
+
 ]#
 
 
 import jester
 import moustachu
 import times
+import json
 from g_static_config import nil
 from g_html_json import nil
 
 
 const 
-  versionfl:float = 0.1
+  versionfl:float = 0.2
   appnamebriefst:string = "CT"
   appnamenormalst = "Controls"
   appnamesuffikst = "Controls-showcase"
@@ -41,10 +50,6 @@ const
 
 settings:
   port = Port(5160)
-
-
-g_static_config.project_prefikst = project_prefikst
-g_static_config.setGuiJsonNode()
 
 
 
@@ -61,7 +66,6 @@ proc showPage(par_innervarob, par_outervarob: var Context,
   return render(readFile("controls_outer.html") , par_outervarob)
 
 
-
 routes:
   get "/":
     var
@@ -73,18 +77,20 @@ routes:
     The webserver-interface without cliental javascript has only one button:
     submit your request to the server. Switches (like below) indicate what you want to do."""
 
-    innervarob["newtab"] = "_self"
 
+    gui_jnob = g_static_config.getGuiJsonNode(project_prefikst)
+
+    innervarob["newtab"] = "_self"
     outervarob["version"] = $versionfl
     outervarob["loadtime"] ="Server-start: " & $now()
     outervarob["pagetitle"] = appnamenormalst
     outervarob["namesuffix"] = appnamesuffikst
-    innervarob["dropdown1"] = g_html_json.setDropDown(g_static_config.gui_jnob, "dropdownname_01", "")
-    innervarob["dropdown2"] = g_html_json.setDropDown(g_static_config.gui_jnob, "dropdownname_02", "")
-    innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(g_static_config.gui_jnob, 
+    innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", "")
+    innervarob["dropdown2"] = g_html_json.setDropDown(gui_jnob, "dropdownname_02", "")
+    innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(gui_jnob, 
                                             "radio-set-example", "")
-    innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(g_static_config.gui_jnob, 
-                                                          "check-set-example", @["default"])
+    innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(gui_jnob, 
+                                                "check-set-example", @["default"])
 
     resp showPage(innervarob, outervarob)
 
@@ -99,6 +105,11 @@ routes:
       innervarob: Context = newContext()  # inner html insertions
       outervarob: Context = newContext()   # outer html insertions
 
+    # g_static_config.project_prefikst = project_prefikst
+    # g_static_config.setGuiJsonNode()
+    gui_jnob = g_static_config.getGuiJsonNode(project_prefikst)
+
+
     innervarob["newtab"] = "_self"
     outervarob["version"] = $versionfl
     outervarob["loadtime"] ="Server-start: " & $now()
@@ -107,25 +118,25 @@ routes:
 
     innervarob["linkcolor"] = "red"
 
-    innervarob["dropdown1"] = g_html_json.setDropDown(g_static_config.gui_jnob, "dropdownname_01", 
+    innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", 
                                                           @"dropdownname_01")
     righttekst = "The value of dropdownname_01 = " & @"dropdownname_01"
 
-    innervarob["dropdown2"] = g_html_json.setDropDown(g_static_config.gui_jnob, "dropdownname_02", 
-                                                          request.params["dropdownname_02"])
+    innervarob["dropdown2"] = g_html_json.setDropDown(gui_jnob, "dropdownname_02", 
+                                                request.params["dropdownname_02"])
 
     righttekst = righttekst & "<br>" & "The value of dropdownname_02 = " & @"dropdownname_02"
 
-    innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(g_static_config.gui_jnob, 
-                                    "radio-set-example", request.params["radio-set-example"])
+    innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(gui_jnob, 
+                                "radio-set-example", request.params["radio-set-example"])
 
     # righttekst = righttekst & "<br>" & "The selected radiobutton = " & 
     #                                   request.params["radio-set-example"]
     righttekst = righttekst & "<br>" & "The selected radiobutton = " & @"radio-set-example"
 
 
-    innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(g_static_config.gui_jnob, 
-                                              "check-set-example", @[@"check1", @"check2", @"check3"])
+    innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(gui_jnob, 
+                                "check-set-example", @[@"check1", @"check2", @"check3"])
 
     righttekst = righttekst & "<br>" & "The boxes that are checked are: " & 
                                   @"check1" & " " & @"check2" & " " & @"check3"
