@@ -6,6 +6,7 @@
 # Unignore all dirs
 !*/
 
+
 *.swp
 *sublime*
 *bluefish*
@@ -15,5 +16,5 @@ mostfiles/flashread.*
 mostfiles/jo_htmlgen.nim
 mostfiles/webgui_def.nim
 *~
-
+controls_gui_test.json
 

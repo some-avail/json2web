@@ -33,21 +33,25 @@ ADAP NOW
 ]#
 
 
-import jester, moustachu, times, json, os
+import jester, moustachu, times, json, os, tables
 from g_static_config import nil
 from g_html_json import nil
+from g_tools import nil
+
 
 
 const 
-  versionfl:float = 0.2
-  appnamebriefst:string = "CT"
-  appnamenormalst = "Controls"
-  appnamesuffikst = "Controls-showcase"
-  project_prefikst = "controls"
+  versionfl:float = 0.1
+  project_prefikst = "scricon"
+  appnamebriefst = "SC"
+  appnamenormalst = "ScriCon"
+  appnamelongst = "Scripted Controls"
+  appnamesuffikst = " showcase"
+  portnumberit = 5160
 
 
 settings:
-  port = Port(5160)
+  port = Port(portnumberit)
 
 
 
@@ -56,26 +60,32 @@ proc showPage(par_innervarob, par_outervarob: var Context,
 
   var innerhtmlst:string
   if custominnerhtmlst == "":
-    innerhtmlst = render(readFile("controls_inner.html") , par_innervarob)    
+    innerhtmlst = render(readFile(project_prefikst & "_inner.html") , par_innervarob)    
   else:
     innerhtmlst = custominnerhtmlst
   par_outervarob["controls-group"] = innerhtmlst
 
-  return render(readFile("controls_outer.html") , par_outervarob)
+  return render(readFile(project_prefikst & "_outer.html"), par_outervarob)
 
 
-routes:
+
   # sleep 1000
   # echo "hai"
   # echo $now()
 
+
+
+routes:
+
   get "/":
-    # retrieve the json-file
+    resp "Type: localhost:" & $portnumberit & "/" & project_prefikst
 
-    resp "Type: localhost:5160/controls"
 
-    
-  get "/controls":
+  get "/scricon":
+
+  # hard code because following does not work:
+  # get ("/" & project_prefikst):
+
     var
       statustekst:string
       innervarob: Context = newContext()  # inner html insertions
@@ -90,8 +100,13 @@ routes:
     innervarob["newtab"] = "_self"
     outervarob["version"] = $versionfl
     outervarob["loadtime"] ="Page-load: " & $now()
-    outervarob["pagetitle"] = appnamenormalst
+    outervarob["namenormal"] = appnamenormalst
+    outervarob["namelong"] = appnamelongst
     outervarob["namesuffix"] = appnamesuffikst
+    outervarob["pagetitle"] = appnamelongst & appnamesuffikst   
+    outervarob["project_prefix"] = project_prefikst
+
+    innervarob["project_prefix"] = project_prefikst  
     innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", "")
     innervarob["dropdown2"] = g_html_json.setDropDown(gui_jnob, "dropdownname_02", "")
     innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(gui_jnob, 
@@ -106,23 +121,50 @@ routes:
     resp "Hello world"
 
 
-  post "/controls":
+  post "/scricon":
+
     var
       statustekst, righttekst:string
       innervarob: Context = newContext()  # inner html insertions
       outervarob: Context = newContext()   # outer html insertions
+      cookievaluest, locationst, varnamest: string
+      funcpartsta =  initOrderedTable[string, string]()
+
 
     # g_static_config.project_prefikst = project_prefikst
     # g_static_config.setGuiJsonNode()
     var gui_jnob = g_static_config.getGuiJsonNode(project_prefikst)
 
 
+    # A server-function may have been called from client-side (browser-javascript) by
+    # preparing a cookie for the server (that is here) to pick up and execute.
+    # (what i call a cookie-tunnel)
+    if request.cookies.haskey(project_prefikst & "_run_function"):
+      cookievaluest = request.cookies[project_prefikst & "_run_function"]
+      if cookievaluest != "DISABLED":
+        funcpartsta = g_tools.getFuncParts(cookievaluest) 
+        locationst = funcpartsta["location"]
+        varnamest = funcpartsta["varname"]
+
+        if locationst == "inner":
+          innervarob[varnamest] = g_tools.runFunctionFromClient(funcpartsta)
+        elif locationst == "outer":
+          outervarob[varnamest] = g_tools.runFunctionFromClient(funcpartsta)
+
+
+
     innervarob["newtab"] = "_self"
     outervarob["version"] = $versionfl
     outervarob["loadtime"] ="Page-load: " & $now()
-    outervarob["pagetitle"] = appnamenormalst
-    outervarob["namesuffix"] = appnamesuffikst
 
+    outervarob["namenormal"] = appnamenormalst
+    outervarob["namelong"] = appnamelongst
+    outervarob["namesuffix"] = appnamesuffikst
+    outervarob["pagetitle"] = appnamelongst & appnamesuffikst   
+    outervarob["project_prefix"] = project_prefikst     
+
+
+    innervarob["project_prefix"] = project_prefikst  
     innervarob["linkcolor"] = "red"
 
     innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", 

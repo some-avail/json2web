@@ -5,11 +5,14 @@ based on an external gui-def in json-format (project_gui.json)
 whereby project is changeable prefix for the current project.
 
 ADAP HIS
+-jsonize procs
 
 
 ADAP NOW
--jsonize procs
+-update procs with onchange-event
+-update dropdown with size-attribute
  ]#
+
 
 
 import tables

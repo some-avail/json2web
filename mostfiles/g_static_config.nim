@@ -9,8 +9,6 @@
 
   This module is currently used as generic module, that is not 
   project-specific. The other two configs are project-specific (future).
-
-
   ]#
 
 
@@ -22,5 +20,4 @@ var versionfl: float = 0.2
 
 proc getGuiJsonNode*(proj_prefikst: string): JsonNode = 
   var filest = proj_prefikst & "_gui.json"
-  echo filest
   result = parseFile(filest)

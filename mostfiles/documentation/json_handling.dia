@@ -90,7 +90,7 @@
         <dia:point val="4.94956,-2.40471"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="4.89956,-2.45471;14.2971,0.345289"/>
+        <dia:rectangle val="4.89956,-2.45471;14.2971,0.34529"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="4.94956,-2.40471"/>
@@ -162,7 +162,7 @@ the server / program#</dia:string>
             <dia:string>#Program reads from the 
 database and/or file-sources
  and then writes
-data to the jnob#</dia:string>
+data to jnob-1#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="sans" style="0" name="Helvetica"/>
@@ -184,16 +184,16 @@ data to the jnob#</dia:string>
     </dia:object>
     <dia:object type="Flowchart - Magnetic Disk" version="1" id="O2">
       <dia:attribute name="obj_pos">
-        <dia:point val="-15.5591,6.72645"/>
+        <dia:point val="-15.5591,6.05372"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-15.6591,6.62645;-10.9591,11.2264"/>
+        <dia:rectangle val="-15.6591,5.95372;-10.9591,10.5537"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="-15.5591,6.72645"/>
+        <dia:point val="-15.5591,6.05372"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="4.4999999999999964"/>
@@ -232,7 +232,7 @@ data to the jnob#</dia:string>
             <dia:real val="0.80000000000000004"/>
           </dia:attribute>
           <dia:attribute name="pos">
-            <dia:point val="-13.3091,9.49311"/>
+            <dia:point val="-13.3091,8.82038"/>
           </dia:attribute>
           <dia:attribute name="color">
             <dia:color val="#000000ff"/>
@@ -257,14 +257,14 @@ data to the jnob#</dia:string>
     </dia:object>
     <dia:object type="Standard - Line" version="0" id="O3">
       <dia:attribute name="obj_pos">
-        <dia:point val="-11.0115,8.78465"/>
+        <dia:point val="-11.0114,8.24676"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-11.0645,8.24388;-6.94006,8.90442"/>
+        <dia:rectangle val="-11.0616,7.90554;-6.93993,8.56734"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
-        <dia:point val="-11.0115,8.78465"/>
-        <dia:point val="-7.00175,8.53719"/>
+        <dia:point val="-11.0114,8.24676"/>
+        <dia:point val="-7.00173,8.23462"/>
       </dia:attribute>
       <dia:attribute name="numcp">
         <dia:int val="1"/>
@@ -320,7 +320,7 @@ json-node-object
             <dia:real val="0.80000000000000004"/>
           </dia:attribute>
           <dia:attribute name="pos">
-            <dia:point val="-2.45288,0.144288"/>
+            <dia:point val="-2.45287,0.14429"/>
           </dia:attribute>
           <dia:attribute name="color">
             <dia:color val="#000000ff"/>
@@ -381,13 +381,13 @@ json-node-object
     </dia:object>
     <dia:object type="Standard - Line" version="0" id="O6">
       <dia:attribute name="obj_pos">
-        <dia:point val="1.32976,1.98584"/>
+        <dia:point val="1.32977,1.98585"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
         <dia:rectangle val="1.27015,1.92623;6.64837,3.34227"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
-        <dia:point val="1.32976,1.98584"/>
+        <dia:point val="1.32977,1.98585"/>
         <dia:point val="6.58802,3.14874"/>
       </dia:attribute>
       <dia:attribute name="numcp">
@@ -412,7 +412,7 @@ json-node-object
         <dia:point val="5.82442,5.23801"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="3.24432,5.17329;5.88914,6.31408"/>
+        <dia:rectangle val="3.24432,5.1733;5.88914,6.31409"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="5.82442,5.23801"/>
@@ -488,7 +488,7 @@ json-node-object
         <dia:point val="-15.7889,-0.48425"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-15.8389,-0.53425;-9.24893,3.06575"/>
+        <dia:rectangle val="-15.8389,-0.53425;-9.24898,3.06575"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="-15.7889,-0.48425"/>
@@ -535,14 +535,14 @@ file#</dia:string>
     </dia:object>
     <dia:object type="Standard - Line" version="0" id="O10">
       <dia:attribute name="obj_pos">
-        <dia:point val="5.11077,-0.233996"/>
+        <dia:point val="5.11077,-0.233994"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="1.26704,-0.292175;5.16894,0.67541"/>
+        <dia:rectangle val="1.26705,-0.292174;5.16895,0.675411"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
-        <dia:point val="5.11077,-0.233996"/>
-        <dia:point val="1.32784,0.457848"/>
+        <dia:point val="5.11077,-0.233994"/>
+        <dia:point val="1.32784,0.45785"/>
       </dia:attribute>
       <dia:attribute name="numcp">
         <dia:int val="1"/>
@@ -563,14 +563,14 @@ file#</dia:string>
     </dia:object>
     <dia:object type="Standard - Line" version="0" id="O11">
       <dia:attribute name="obj_pos">
-        <dia:point val="-9.89272,1.23515"/>
+        <dia:point val="-9.89275,1.23515"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-9.9433,0.868995;-6.17429,1.53075"/>
+        <dia:rectangle val="-9.94333,0.868996;-6.1743,1.53076"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
-        <dia:point val="-9.89272,1.23515"/>
-        <dia:point val="-6.23609,1.19295"/>
+        <dia:point val="-9.89275,1.23515"/>
+        <dia:point val="-6.2361,1.19295"/>
       </dia:attribute>
       <dia:attribute name="numcp">
         <dia:int val="1"/>
@@ -669,7 +669,7 @@ jnob-2#</dia:string>
         <dia:point val="-2.11901,15.6343"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-2.44756,15.5842;-1.78575,17.2851"/>
+        <dia:rectangle val="-2.44755,15.5842;-1.78575,17.2851"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="-2.11901,15.6343"/>
@@ -774,7 +774,7 @@ jnob-2#</dia:string>
         <dia:point val="-5.31117,22.7659"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-5.36117,22.7159;1.27964,25.6826"/>
+        <dia:rectangle val="-5.36117,22.7159;1.27965,25.6826"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="-5.31117,22.7659"/>
@@ -806,7 +806,7 @@ jnob-2#</dia:string>
             <dia:real val="0.80000000000000004"/>
           </dia:attribute>
           <dia:attribute name="pos">
-            <dia:point val="-2.04077,24.3942"/>
+            <dia:point val="-2.04076,24.3943"/>
           </dia:attribute>
           <dia:attribute name="color">
             <dia:color val="#000000ff"/>
@@ -822,11 +822,11 @@ jnob-2#</dia:string>
         <dia:point val="-2.08369,21.1046"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-2.40052,21.0539;-1.73878,22.7782"/>
+        <dia:rectangle val="-2.40052,21.0539;-1.73878,22.7783"/>
       </dia:attribute>
       <dia:attribute name="conn_endpoints">
         <dia:point val="-2.08369,21.1046"/>
-        <dia:point val="-2.06133,22.7164"/>
+        <dia:point val="-2.06133,22.7165"/>
       </dia:attribute>
       <dia:attribute name="numcp">
         <dia:int val="1"/>
