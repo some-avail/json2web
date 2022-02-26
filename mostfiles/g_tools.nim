@@ -1,7 +1,7 @@
 
 
-import tables, strutils
-
+import tables, strutils, json
+from g_html_json import nil
 
 
 var debugbo: bool = true
@@ -36,12 +36,20 @@ proc getFuncParts*(functionpartst: string): OrderedTable[string, string] =
   result = functa
 
 
-proc runFunctionFromClient*(funcPartsta: OrderedTable[string, string]): string = 
+proc runFunctionFromClient*(funcPartsta: OrderedTable[string, string], jnob: JsonNode): string = 
 
   # run the function
   if funcPartsta["funcname"] == "g_tools.dummyPass":
     result = dummyPass(funcPartsta["param1"])
+  elif funcPartsta["funcname"] == "g_html_json.setDropDown":
+    result = g_html_json.setDropDown(jnob, funcPartsta["param2"], funcPartsta["param3"], parseInt(funcPartsta["param4"]))
 
+
+
+
+#     "funcname:g_html_json.setDropDown++location:inner++varname:dropdown1++param2:dropdownname_01++param3:third realvalue++param4:1", 60);
+# proc setDropDown*(jnob: JsonNode, dropdownnamest, selected_valuest: string, 
+#                     sizeit: int):string = 
 
 
 

@@ -20,7 +20,7 @@ import webgui_def
 # import fr_tools 
 import json
 from g_json_plus import nil
-from g_static_config import nil
+from scricon_loadjson import nil
 
 
 var 
@@ -135,7 +135,9 @@ Returns for sample-def (default):
 
 
 
-proc setDropDown*(jnob: JsonNode, dropdownnamest, selected_valuest: string):string = 
+
+proc setDropDown*(jnob: JsonNode, dropdownnamest, selected_valuest: string, 
+                    sizeit: int):string = 
 
 #[ 
 UNIT INFO:
@@ -145,11 +147,13 @@ In this procedure you can only set one control per call.
 The first string-item of the def is dropdownnamest, and you must choose 
 a selected value that is to be shown after loading.
 
+
 Sample output:
-<span style="font-size:small"><label for="language">Language</label></span>
-<select id="language" name="language">
-<option value="dutch">Dutch</option>
-<option value="english" selected>English</option>
+<span ><label for="dropdownname_01">Some label:</label></span>
+<select id="dropdownname_01" name="dropdownname_01" size="1" onchange="dropdownname_01_onchange">
+<option value="some realvalue">this value is shown</option>
+<option value="second realvalue">second value is shown</option>
+<option value="third realvalue">third value is shown</option>
 </select>
  ]#
 
@@ -180,15 +184,20 @@ Sample output:
 
 
   dropdown_html = "<span ><label for=\"" & namest & "\">" & labelst & "</label></span>\p"
-  dropdown_html &= "<select id=\"" & namest & "\" name=\"" & namest & "\">\p"
+  # dropdown_html &= "<select id=\"" & namest & "\" name=\"" & namest & "\">\p"
+  dropdown_html &= "<select id=\"" & namest & "\" name=\"" & namest & "\" size=\"" & 
+                      $sizeit & "\" onchange=\"" & namest & "_onchange()\">\p"
   dropdown_html &= dropdown_list
   dropdown_html &= "</select>\p"
 
 
-  # <span style="font-size:small"><label for="language">Language</label></span>
-  # <select id="language" name="language">
-  # {{{text_language}}}
-  # </select>
+# <span ><label for="dropdownname_01">Some label:</label></span>
+# <select id="dropdownname_01" name="dropdownname_01" size="1" onchange="dropdownname_01_onchange">
+# <option value="some realvalue">this value is shown</option>
+# <option value="second realvalue">second value is shown</option>
+# <option value="third realvalue">third value is shown</option>
+# </select>
+
 
   return dropdown_html
 
@@ -202,11 +211,11 @@ when isMainModule:
   # echo "---------"
   # echo setDropDown("text-language", "english")
   
-  
-  g_static_config.project_prefikst = "controls"
-  g_static_config.setGuiJsonNode()
+  # scricon_loadjson.setGuiJsonNode("scricon")
 
-  # echo setRadioButtons(g_static_config.gui_jnob, "radio-set-example", "")
-  # echo setCheckBoxSet(g_static_config.gui_jnob, "check-set-example", @["default"])
+  # echo setRadioButtons(scricon_loadjson.gui_jnob, "radio-set-example", "")
+  # echo setCheckBoxSet(scricon_loadjson.gui_jnob, "check-set-example", @["default"])
 
-  echo setDropDown(g_static_config.gui_jnob, "dropdownname_01", "some realvalue")
+  echo "============================"
+  echo setDropDown(scricon_loadjson.getGuiJsonNode("scricon"), "dropdownname_01", "some realvalue", 1)
+

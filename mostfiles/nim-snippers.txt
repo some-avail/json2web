@@ -18,12 +18,3 @@
 
 
 ===============================
-   <script type="text/javascript">
-      fetch("controls_gui_test.json")
-        .then(results => results.json())
-        .then(data => {
-            console.log(data["controls-webcontrols"]);
-          // or whatever you wanna do with the data
-        });
-
-   </script>

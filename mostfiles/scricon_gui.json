@@ -74,7 +74,19 @@
                   {"real-value": "derde waarde", "show-value": "getoonde waarde 3"}
                 ]
               }
+            ],
+            "dropdownname_03":
+            [
+              {"ddlab": "Some label:"},
+              {"ddvalues": 
+                [
+                  {"real-value": "echte waarde", "show-value": "getoonde waarde 1"},
+                  {"real-value": "tweede waarde", "show-value": "getoonde waarde 2"},
+                  {"real-value": "derde waarde", "show-value": "getoonde waarde 3"}
+                ]
+              }
             ]
+
           }
     }
 }
