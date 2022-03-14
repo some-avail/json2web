@@ -92,8 +92,8 @@ routes:
     outervarob["loadtime"] ="Page-load: " & $now()
     outervarob["pagetitle"] = appnamenormalst
     outervarob["namesuffix"] = appnamesuffikst
-    innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", "")
-    innervarob["dropdown2"] = g_html_json.setDropDown(gui_jnob, "dropdownname_02", "")
+    innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", "", 1)
+    innervarob["dropdown2"] = g_html_json.setDropDown(gui_jnob, "dropdownname_02", "", 1)
     innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(gui_jnob, 
                                             "radio-set-example", "")
     innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(gui_jnob, 
@@ -126,11 +126,11 @@ routes:
     innervarob["linkcolor"] = "red"
 
     innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", 
-                                                          @"dropdownname_01")
+                                                          @"dropdownname_01", 1)
     righttekst = "The value of dropdownname_01 = " & @"dropdownname_01"
 
     innervarob["dropdown2"] = g_html_json.setDropDown(gui_jnob, "dropdownname_02", 
-                                                request.params["dropdownname_02"])
+                                                request.params["dropdownname_02"], 1)
 
     righttekst = righttekst & "<br>" & "The value of dropdownname_02 = " & @"dropdownname_02"
 

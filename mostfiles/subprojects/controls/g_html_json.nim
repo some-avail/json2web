@@ -16,11 +16,10 @@ ADAP NOW
 
 
 import tables
-import webgui_def
 # import fr_tools 
 import json
 from g_json_plus import nil
-from scricon_loadjson import nil
+# from scricon_loadjson import nil
 
 
 var 
@@ -217,5 +216,5 @@ when isMainModule:
   # echo setCheckBoxSet(scricon_loadjson.gui_jnob, "check-set-example", @["default"])
 
   echo "============================"
-  echo setDropDown(scricon_loadjson.getGuiJsonNode("scricon"), "dropdownname_01", "some realvalue", 1)
+  # echo setDropDown(scricon_loadjson.getGuiJsonNode("scricon"), "dropdownname_01", "some realvalue", 1)
 
