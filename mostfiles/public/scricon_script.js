@@ -1,12 +1,17 @@
+/*
+Webbie uses a cookie-tunnel to execute code from the server. This means
+that in javascript (client-side) a cookie is set to be picked up by the server
+and run there. Search for cookievaluest in project_startup.nim where the 
+pickup starts.
+*/
+
+
+
 function copyText() {
+  // copy text from one textbox to an other
   document.getElementById('tbox2').value = document.getElementById('tbox1').value;
-  console.log('hallo daar');
+  console.log('text copied');
 }
-
-
-// function dropdownname_03_onchange() {
-//   document.getElementById('tbox1').value = document.getElementById('dropdownname_03').value
-// }
 
 
 function setCookie_old3(cName, cValue, expDays) {
@@ -22,8 +27,8 @@ function setCookieForSeconds(cName, cValue, forSeconds) {
 }
 
 
-function testSetCookie () {
-  setCookie("Koekje", "Speculaas", 7);
+function testSetCookie() {
+  setCookieForSeconds("Koekje", "Speculaas", 120);
 }
 
 
@@ -43,15 +48,103 @@ function finalize(){
 
 function sendFunctionToServer() {
   setCookieForSeconds("scricon_run_function", 
-    "funcname:g_tools.dummyPass++location:inner++varname:statustext++param1:nieuwe statustekst", 300);
+    "funcname::g_tools.dummyPass++location::inner++mousvarname::statustext++newcontent::nieuwe statustekst", 300);
   finalize();
 }
 
 
-function dropdownname_03_onchange() {
+function setMoustachuVar(mousvarjs, contentjs) {
   setCookieForSeconds("scricon_run_function", 
-    "funcname:g_html_json.setDropDown++location:inner++varname:dropdown1++param2:dropdownname_01++param3:third realvalue++param4:1", 300);
+    "funcname::g_tools.dummyPass++location::inner++mousvarname::" + mousvarjs + 
+    "++newcontent::" + contentjs, 
+    300);
+  
   finalize();
+}
+
+
+function dropdownname_01_onchange() {
+
+// write selection-change to status-text
+
+  var selectjo = document.getElementById("dropdownname_01");
+  var valuejs = selectjo.options[selectjo.selectedIndex].value;
+  // console.log("bericht is:" + valuejs);
+
+  var messagejs = "From dropdown1, item " + selectjo.selectedIndex + " = " + valuejs;
+
+  setMoustachuVar("statustext", messagejs);
+
+}
+
+
+function dropdownname_03_onchange() {
+// set the realvalue of dd1 when dd3 changes
+
+  setCookieForSeconds("scricon_run_function", 
+    "funcname::g_html_json.setDropDown++location::inner++mousvarname::dropdown1++" + 
+    "html-elem-name::dropdownname_01++selected-value::third realvalue++dd-size::1", 
+    300);
+  finalize();
+}
+
+
+function dropdownname_02_onchange() {
+// write selection-change to status-text
+
+  var selectjo = document.getElementById("dropdownname_02");
+  var valuejs = selectjo.options[selectjo.selectedIndex].value;
+  // console.log("bericht is:" + valuejs);
+
+  var messagejs = "From dropdown2, item " + selectjo.selectedIndex + " = " + valuejs;
+
+  setMoustachuVar("statustext", messagejs);
+}
+
+
+function radiosetexample_onchange(valuejs) {
+// write selection-change to status-text
+
+  switch(valuejs) {
+    case "rbut1":
+      alert("button 1");
+      break;
+    case "rbut2":
+      alert("button 2");
+      break;
+    case "rbut3":
+      alert("button 3");
+      break;
+    default:
+      alert("Error in JavaScript function radiosetexample_onchange");
+    }
+}
+
+function check1_onchange()
+{
+  var cboxjo = document.getElementById('id_check1');
+  if (cboxjo.checked == true)
+  {
+    alert("check this one out");
+  }
+}
+
+function check2_onchange()
+{
+  var cboxjo = document.getElementById('id_check2');
+  if (cboxjo.checked == true)
+  {
+    alert("check the second");
+  }
+}
+
+function check3_onchange()
+{
+  var cboxjo = document.getElementById('id_check3');
+  if (cboxjo.checked == true)
+  {
+    alert("check out thrice");
+  }
 }
 
 

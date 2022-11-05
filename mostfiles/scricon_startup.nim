@@ -41,7 +41,7 @@ from g_tools import nil
 
 
 const 
-  versionfl:float = 0.1
+  versionfl:float = 0.2
   project_prefikst = "scricon"
   appnamebriefst = "SC"
   appnamenormalst = "ScriCon"
@@ -111,9 +111,9 @@ routes:
     innervarob["dropdown2"] = g_html_json.setDropDown(gui_jnob, "dropdownname_02", "", 1)
     innervarob["dropdown3"] = g_html_json.setDropDown(gui_jnob, "dropdownname_03", "", 3)
     innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(gui_jnob, 
-                                            "radio-set-example", "")
+                                            "radiosetexample", "")
     innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(gui_jnob, 
-                                                "check-set-example", @["default"])
+                                                "checksetexample", @["default"])
 
     resp showPage(innervarob, outervarob)
 
@@ -128,7 +128,7 @@ routes:
       statustekst, righttekst:string
       innervarob: Context = newContext()  # inner html insertions
       outervarob: Context = newContext()   # outer html insertions
-      cookievaluest, locationst, varnamest: string
+      cookievaluest, locationst, mousvarnamest: string
       funcpartsta =  initOrderedTable[string, string]()
 
 
@@ -161,18 +161,18 @@ routes:
     righttekst = righttekst & "<br>" & "The value of dropdownname_02 = " & @"dropdownname_02"
 
     innervarob["radiobuttonset1"] = g_html_json.setRadioButtons(gui_jnob, 
-                                "radio-set-example", request.params["radio-set-example"])
+                                "radiosetexample", request.params["radiosetexample"])
 
     innervarob["dropdown3"] = g_html_json.setDropDown(gui_jnob, "dropdownname_03", 
                                                           @"dropdownname_03", 3)
 
     # righttekst = righttekst & "<br>" & "The selected radiobutton = " & 
-    #                                   request.params["radio-set-example"]
-    righttekst = righttekst & "<br>" & "The selected radiobutton = " & @"radio-set-example"
+    #                                   request.params["radiosetexample"]
+    righttekst = righttekst & "<br>" & "The selected radiobutton = " & @"radiosetexample"
 
 
     innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(gui_jnob, 
-                                "check-set-example", @[@"check1", @"check2", @"check3"])
+                                "checksetexample", @[@"check1", @"check2", @"check3"])
 
     righttekst = righttekst & "<br>" & "The boxes that are checked are: " & 
                                   @"check1" & " " & @"check2" & " " & @"check3"
@@ -187,13 +187,13 @@ routes:
       cookievaluest = request.cookies[project_prefikst & "_run_function"]
       if cookievaluest != "DISABLED":
         funcpartsta = g_tools.getFuncParts(cookievaluest) 
-        locationst = funcpartsta["location"]
-        varnamest = funcpartsta["varname"]
+        locationst = funcpartsta["location"]  # innerhtml-page or outerhtml-page
+        mousvarnamest = funcpartsta["mousvarname"]
 
         if locationst == "inner":
-          innervarob[varnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
+          innervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
         elif locationst == "outer":
-          outervarob[varnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
+          outervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
 
 
 

@@ -8,8 +8,9 @@
     {
       "p-description": "Project to showcase all controls generatable from a json-file.",
       "p-version": 0.12,
-      "tip-one": "Append abbreviations like fp (first page) to maintain uniques of keys",
-      "tip-two": "Arrays dont have to be unique (are not searched for keys from the outside)"
+      "tip-one": "Append abbreviations like fp (first page) to maintain uniqueness of keys",
+      "tip-two": "Arrays dont have to be unique (are not searched for keys from the outside)",
+      "tip-three": "Dont use hyphens - in names of controls or elements; not allowed in JS"
     }
   },
   "all web-pages":
@@ -20,13 +21,13 @@
         {
           "radio-button-sets fp":
           {
-            "radio-set-example":
+            "radiosetexample":
             [
               {"name":"rbut1","lab":"this is button one","selected":true},
               {"name":"rbut2","lab":"this is button two","selected":false},
               {"name":"rbut3","lab":"and here nr. 3","selected":false}
             ],
-            "radio-set-two":
+            "radiosettwo":
             [
               {"name":"rabut1","lab":"Bouton un","selected":true},
               {"name":"rabut2","lab":"Bouton deux","selected":false},
@@ -37,13 +38,13 @@
         
           "check-box-sets fp":
           {
-            "check-set-example":
+            "checksetexample":
             [
               {"name":"check1","lab":"this is box one","selected":true},
               {"name":"check2","lab":"this is box two","selected":true},
               {"name":"check3","lab":"and here box 3","selected":false}
             ],
-            "check-set-two":
+            "checksettwo":
             [
               {"name":"chk1","lab":"vinkvakje 1","selected":true},
               {"name":"chk2","lab":"vinkvakje 2","selected":false},
@@ -55,7 +56,7 @@
           {
             "dropdownname_01":
             [
-              {"ddlab": "Some label:"},
+              {"ddlab": "Drop1:"},
               {"ddvalues": 
                 [
                   {"real-value": "some realvalue", "show-value": "this value is shown"},
@@ -66,7 +67,7 @@
             ],
             "dropdownname_02":
             [
-              {"ddlab": "Some label:"},
+              {"ddlab": "Drop2:"},
               {"ddvalues": 
                 [
                   {"real-value": "echte waarde", "show-value": "getoonde waarde 1"},
@@ -77,7 +78,7 @@
             ],
             "dropdownname_03":
             [
-              {"ddlab": "Some label:"},
+              {"ddlab": "Drop3:"},
               {"ddvalues": 
                 [
                   {"real-value": "echte waarde", "show-value": "getoonde waarde 1"},
@@ -90,9 +91,6 @@
           }
     }
 }
-
-
-
 
 
 

@@ -21,7 +21,7 @@ proc dummyPass(paramst: string): string =
 
 proc getFuncParts*(functionpartst: string): OrderedTable[string, string] =
   # parse the function-parts
-  # sample: "funcname:g_tools.dummyPass++location:inner++varname:statustext++param1:nieuwe statustekst"
+  # sample: "funcname::g_tools.dummyPass++location::inner++varname:statustext++param1::nieuwe statustekst"
   var 
     funcpartsq, keyvalsq: seq[string]
     functa =  initOrderedTable[string, string]()
@@ -30,7 +30,7 @@ proc getFuncParts*(functionpartst: string): OrderedTable[string, string] =
   log($funcpartsq)
 
   for item in funcpartsq:
-    keyvalsq = item.split(":")
+    keyvalsq = item.split("::")
     functa[keyvalsq[0]] = keyvalsq[1]
   # log($functa)
   result = functa
@@ -40,9 +40,10 @@ proc runFunctionFromClient*(funcPartsta: OrderedTable[string, string], jnob: Jso
 
   # run the function
   if funcPartsta["funcname"] == "g_tools.dummyPass":
-    result = dummyPass(funcPartsta["param1"])
+    result = dummyPass(funcPartsta["newcontent"])
   elif funcPartsta["funcname"] == "g_html_json.setDropDown":
-    result = g_html_json.setDropDown(jnob, funcPartsta["param2"], funcPartsta["param3"], parseInt(funcPartsta["param4"]))
+    result = g_html_json.setDropDown(jnob, funcPartsta["html-elem-name"], funcPartsta["selected-value"], 
+      parseInt(funcPartsta["dd-size"]))
 
 
 

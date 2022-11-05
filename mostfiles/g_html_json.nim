@@ -4,6 +4,10 @@ Generic module and functions to generate html-code
 based on an external gui-def in json-format (project_gui.json)
 whereby project is changeable prefix for the current project.
 
+Remark: Do not use hyphenated element-names because they cannot be 
+reused in javascript.
+
+
 ADAP HIS
 -jsonize procs
 
@@ -16,15 +20,13 @@ ADAP NOW
 
 
 import tables
-import webgui_def
-# import fr_tools 
 import json
 from g_json_plus import nil
 from scricon_loadjson import nil
 
 
 var 
-  versionfl = 0.2
+  versionfl = 0.3
 
 
 proc newlang(fromlangst:string):string = 
@@ -40,12 +42,14 @@ proc setRadioButtons*(jnob: JsonNode, setnamest, value_selectst:string): string 
   for radio-buttons.
 
   Returns for sample-def:
-  <input type="radio" id="id_aap" name="een-naam" value="aap">
-  <label for="id_aap">grote aap</label><br>
-  <input type="radio" id="id_noot" name="een-naam" value="noot">
-  <label for="id_noot">notenboom</label><br>
-  <input type="radio" id="id_mies" name="een-naam" value="mies" checked>
-  <label for="id_mies">mies-bouwman</label><br>
+
+<input type="radio" id="id_rbut1" name="radio-set-example" onchange="radio-set-example_onchange()" value="rbut1">
+<label for="id_rbut1">this is button one</label><br>
+<input type="radio" id="id_rbut2" name="radio-set-example" onchange="radio-set-example_onchange()" value="rbut2">
+<label for="id_rbut2">this is button two</label><br>
+<input type="radio" id="id_rbut3" name="radio-set-example" onchange="radio-set-example_onchange()" value="rbut3" checked>
+<label for="id_rbut3">and here nr. 3</label><br>
+
    ]#
 
 
@@ -72,12 +76,17 @@ proc setRadioButtons*(jnob: JsonNode, setnamest, value_selectst:string): string 
       if value_selectst == valuest:
         checkst = " checked"
 
+
     htmlst &= "<input type=\"radio\" id=\"id_" & valuest & 
-       "\" name=\"" & setnamest & "\" value=\"" & valuest & "\"" & checkst & ">\p"
+        "\" name=\"" & setnamest & 
+#        "\" onchange=\"" & setnamest & "_onchange()" &
+        "\" onchange=\"" & setnamest & "_onchange(\'" & valuest & "\')" &
+        "\" value=\"" & valuest & "\"" & checkst & ">\p"
+
+
     htmlst &= "<label for=\"id_" & valuest & "\">" & labelst & "</label><br>\p"
 
   return htmlst
-
 
 
 
@@ -128,7 +137,9 @@ Returns for sample-def (default):
           checkst = " checked"
 
     htmlst &= "<input type=\"checkbox\" id=\"id_" & boxnamest & 
-       "\" name=\"" & boxnamest & "\" value=\"" & boxnamest & "\""  & checkst & ">\p"
+       "\" name=\"" & boxnamest & "\" value=\"" & boxnamest & "\""  & 
+        " onchange=\"" & boxnamest & "_onchange()\"" &
+       checkst & ">\p"
     htmlst &= "<label for=\"id_" & boxnamest & "\">" & labelst & "</label><br>\p"
 
   return htmlst
@@ -145,7 +156,9 @@ Generate code for a dropdown-control/ select-element,
 based on an external json-based gui-def.
 In this procedure you can only set one control per call.
 The first string-item of the def is dropdownnamest, and you must choose 
-a selected value that is to be shown after loading.
+a selected value that is to be shown after loading. Lastly with sizeit 
+you define the number of visible options in a drop-down list;
+that is 1 for normal dropdown, n for an n-sized picklist.
 
 
 Sample output:
@@ -213,9 +226,11 @@ when isMainModule:
   
   # scricon_loadjson.setGuiJsonNode("scricon")
 
-  # echo setRadioButtons(scricon_loadjson.gui_jnob, "radio-set-example", "")
-  # echo setCheckBoxSet(scricon_loadjson.gui_jnob, "check-set-example", @["default"])
+  # echo setRadioButtons(scricon_loadjson.gui_jnob, "radiosetexample", "")
+  echo setCheckBoxSet(scricon_loadjson.getGuiJsonNode("scricon"), "checksetexample", @["default"])
 
   echo "============================"
-  echo setDropDown(scricon_loadjson.getGuiJsonNode("scricon"), "dropdownname_01", "some realvalue", 1)
+#  echo setDropDown(scricon_loadjson.getGuiJsonNode("scricon"), "dropdownname_01", "second realvalue", 1)
+
+  # echo setRadioButtons(scricon_loadjson.getGuiJsonNode("scricon"), "radiosetexample", "rbut3")
 
