@@ -115,6 +115,8 @@ routes:
     innervarob["checkboxset1"] = g_html_json.setCheckBoxSet(gui_jnob, 
                                                 "checksetexample", @["default"])
 
+    innervarob["table01"] = g_html_json.setTableBasic(gui_jnob, "table_01")
+
     resp showPage(innervarob, outervarob)
 
 

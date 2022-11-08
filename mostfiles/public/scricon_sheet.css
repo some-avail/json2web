@@ -18,6 +18,20 @@ textarea {
   height: 10 px;
 }
 
+table, th, td {
+  border: 1px solid black;
+  /*border-collapse: collapse;*/
+}
+
+th, td {
+  padding: 10px;
+}
+
+table {
+  margin-left: auto; 
+  margin-right: auto;
+}
+
 .row-top {
   color: green;
   background-color:lightsteelblue;

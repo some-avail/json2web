@@ -7,15 +7,16 @@
 
 import json, tables
 
-var versionfl: float = 0.1
+var versionfl: float = 0.2
 
 
 var filest: string
 # filest = "testedit.json"
-filest = "controls_gui.json"
-# var jnob = parseFile(filest)
+filest = "scricon_gui.json"
+# filest = "test-scricon_gui.json"
+var jnob = parseFile(filest)
 var arrjnob = %*[{"naam":"knakkie", "leeftijd": 89}]
-var jnob = %*{"naam":"knakkie", "leeftijd": 89, "naam": "bizon"}
+# var jnob = %*{"naam":"knakkie", "leeftijd": 89, "naam": "bizon"}
 var tempjnob: JsonNode = %*{}
 
 

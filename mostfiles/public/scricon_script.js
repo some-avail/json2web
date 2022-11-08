@@ -34,10 +34,11 @@ function testSetCookie() {
 
 function finalize(){
 
+  const waitmilsecsji = 200
   document.forms["webbieform"].submit();
-  // wait some milliseconds for the function to be executed
+  // wait some milliseconds for the function to be executed depending on latency
   let now = Date.now(),
-      end = now + 200;
+      end = now + waitmilsecsji;
   while (now < end) { now = Date.now(); }
 
   // Set the value of the cookie to DISABLED so that it is not executed on the next submit

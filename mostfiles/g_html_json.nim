@@ -182,10 +182,10 @@ Sample output:
 
   namest = dropdownnamest
   labelst = newlang(foundjnob[0]["ddlab"].getStr())  # translated
-  var valuelistar = foundjnob[1]["ddvalues"].getElems()   # values not translated for now
+  var valuelistsq = foundjnob[1]["ddvalues"].getElems()   # values not translated for now
 
 
-  for item in valuelistar:
+  for item in valuelistsq:
     valIDst = item["real-value"].getStr()
     valuest = item["show-value"].getStr()
 
@@ -211,10 +211,69 @@ Sample output:
 # <option value="third realvalue">third value is shown</option>
 # </select>
 
-
   return dropdown_html
 
 
+
+
+proc setTableBasic*(jnob: JsonNode, tablenamest: string): string = 
+
+#[ 
+UNIT INFO:
+Generate code for a table-element,
+based on an external json-based gui-def.
+
+
+Sample output:
+<table>
+  <tr>
+    <th>head01</th>
+    <th>head02</th>
+    <th>head03</th>
+    <th>head04</th>
+  </tr>
+  <tr>
+    <td>a1</td>
+    <td>b1</td>
+    <td>c1</td>
+    <td>d1</td>
+  </tr>
+  ...
+</table> 
+ ]#
+
+
+  var
+    table_htmlst: string = ""
+    foundjnob: JsonNode = %*{}
+    headersq, datasq, rowsq: seq[JsonNode] = @[]
+
+  g_json_plus.getDeepNodeFromKey(tablenamest, jnob, foundjnob)
+  
+  # labelst = newlang(foundjnob[0]["ddlab"].getStr())  # translated
+#  var valuelistsq = foundjnob[1]["ddvalues"].getElems()   # values not translated for now
+
+  headersq = foundjnob[0]["theader"].getElems()
+  table_htmlst = "<table>\n  <tr>\n"
+
+  for item in headersq:
+    table_htmlst &= "    <th>" & item.getStr() & "</th>\n"
+
+  table_htmlst &= "  </tr>\n"
+
+  datasq = foundjnob[1]["tdata"].getElems()
+  
+  for row in datasq:
+    rowsq = row.getElems()
+    table_htmlst &= "  <tr>\n"
+    for item in rowsq:
+      # echo item.getStr()
+      table_htmlst &= "    <td>" & item.getStr() & "</td>\n"
+    table_htmlst &= "  </tr>\n"
+
+  table_htmlst &= "</table>\n"
+
+  result = table_htmlst
 
 
 
@@ -227,10 +286,12 @@ when isMainModule:
   # scricon_loadjson.setGuiJsonNode("scricon")
 
   # echo setRadioButtons(scricon_loadjson.gui_jnob, "radiosetexample", "")
-  echo setCheckBoxSet(scricon_loadjson.getGuiJsonNode("scricon"), "checksetexample", @["default"])
+  # echo setCheckBoxSet(scricon_loadjson.getGuiJsonNode("scricon"), "checksetexample", @["default"])
 
   echo "============================"
 #  echo setDropDown(scricon_loadjson.getGuiJsonNode("scricon"), "dropdownname_01", "second realvalue", 1)
 
   # echo setRadioButtons(scricon_loadjson.getGuiJsonNode("scricon"), "radiosetexample", "rbut3")
+
+  echo setTableBasic(scricon_loadjson.getGuiJsonNode("scricon"), "table_01")
 
