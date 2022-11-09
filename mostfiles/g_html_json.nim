@@ -10,11 +10,11 @@ reused in javascript.
 
 ADAP HIS
 -jsonize procs
+-update procs with onchange-event
+-update dropdown with size-attribute
 
 
 ADAP NOW
--update procs with onchange-event
--update dropdown with size-attribute
  ]#
 
 
@@ -22,7 +22,7 @@ ADAP NOW
 import tables
 import json
 from g_json_plus import nil
-from scricon_loadjson import nil
+from datajson_loadjson import nil
 
 
 var 
@@ -283,15 +283,15 @@ when isMainModule:
   # echo "---------"
   # echo setDropDown("text-language", "english")
   
-  # scricon_loadjson.setGuiJsonNode("scricon")
+  # datajson_loadjson.setGuiJsonNode("datajson")
 
-  # echo setRadioButtons(scricon_loadjson.gui_jnob, "radiosetexample", "")
-  # echo setCheckBoxSet(scricon_loadjson.getGuiJsonNode("scricon"), "checksetexample", @["default"])
+  # echo setRadioButtons(datajson_loadjson.gui_jnob, "radiosetexample", "")
+  # echo setCheckBoxSet(datajson_loadjson.getGuiJsonNode("datajson"), "checksetexample", @["default"])
 
   echo "============================"
-#  echo setDropDown(scricon_loadjson.getGuiJsonNode("scricon"), "dropdownname_01", "second realvalue", 1)
+#  echo setDropDown(datajson_loadjson.getGuiJsonNode("datajson"), "dropdownname_01", "second realvalue", 1)
 
-  # echo setRadioButtons(scricon_loadjson.getGuiJsonNode("scricon"), "radiosetexample", "rbut3")
+  # echo setRadioButtons(datajson_loadjson.getGuiJsonNode("datajson"), "radiosetexample", "rbut3")
 
-  echo setTableBasic(scricon_loadjson.getGuiJsonNode("scricon"), "table_01")
+  echo setTableBasic(datajson_loadjson.getGuiJsonNode("datajson"), "table_01")
 

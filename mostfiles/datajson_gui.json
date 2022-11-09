@@ -2,12 +2,12 @@
 
 
 {
-  "scricon-webcontrols":
+  "datajson-webcontrols":
   {
     "project-properties":
     {
       "p-description": "Project to showcase scripting, events and the cookie-tunnel",
-      "p-prefix": "scricon (for scripted controls)",
+      "p-prefix": "datajson (for database-work thru json)",
       "p-version": 0.14,
       "tip-one": "Append abbreviations like fp (first page) to maintain uniqueness of keys",
       "tip-two": "Arrays dont have to be unique (are not searched for keys from the outside)",

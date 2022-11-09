@@ -19,7 +19,7 @@ anymore. But you cannot store a global in a proc so retrieve them from a
 file. When you only read from the files no-problemo but if you write you 
 might get problems because of the shared data corruption; that is different 
 threads writing and expecting different data.
-See also the module scricon_loadjson.nim
+See also the module datajson_loadjson.nim
 Currently --threads :on compiles and runs succesfully.
 
 
@@ -34,7 +34,7 @@ ADAP NOW
 
 
 import jester, moustachu, times, json, os, tables
-from scricon_loadjson import nil
+from datajson_loadjson import nil
 from g_html_json import nil
 from g_tools import nil
 
@@ -42,12 +42,12 @@ from g_tools import nil
 
 const 
   versionfl:float = 0.2
-  project_prefikst = "scricon"
-  appnamebriefst = "SC"
-  appnamenormalst = "ScriCon"
-  appnamelongst = "Scripted Controls"
+  project_prefikst = "datajson"
+  appnamebriefst = "DJ"
+  appnamenormalst = "DataJson"
+  appnamelongst = "Database thru json"
   appnamesuffikst = " showcase"
-  portnumberit = 5160
+  portnumberit = 5170
 
 
 settings:
@@ -81,7 +81,7 @@ routes:
     resp "Type: localhost:" & $portnumberit & "/" & project_prefikst
 
 
-  get "/scricon":
+  get "/datajson":
 
   # hard code because following does not work:
   # get ("/" & project_prefikst):
@@ -95,7 +95,7 @@ routes:
     The webserver-interface without cliental javascript has only one button:
     submit your request to the server. Switches (like below) indicate what you want to do."""
 
-    var gui_jnob = scricon_loadjson.getGuiJsonNode(project_prefikst)
+    var gui_jnob = datajson_loadjson.getGuiJsonNode(project_prefikst)
 
     innervarob["newtab"] = "_self"
     outervarob["version"] = $versionfl
@@ -124,7 +124,7 @@ routes:
     resp "Hello world"
 
 
-  post "/scricon":
+  post "/datajson":
 
     var
       statustekst, righttekst:string
@@ -136,7 +136,7 @@ routes:
 
     # g_static_config.project_prefikst = project_prefikst
     # g_static_config.setGuiJsonNode()
-    var gui_jnob = scricon_loadjson.getGuiJsonNode(project_prefikst)
+    var gui_jnob = datajson_loadjson.getGuiJsonNode(project_prefikst)
 
 
     innervarob["newtab"] = "_self"

@@ -23,7 +23,7 @@ function setCookie_old3(cName, cValue, expDays) {
 
 
 function setCookieForSeconds(cName, cValue, forSeconds) {
-  document.cookie = cName + "=" + cValue + ";max-age=" + forSeconds  + "; path=/scricon";
+  document.cookie = cName + "=" + cValue + ";max-age=" + forSeconds  + "; path=/datajson";
 }
 
 
@@ -43,19 +43,19 @@ function finalize(){
 
   // Set the value of the cookie to DISABLED so that it is not executed on the next submit
   // This is needed because cookie-deletion is insecure
-  setCookieForSeconds("scricon_run_function", "DISABLED", 300);  
+  setCookieForSeconds("datajson_run_function", "DISABLED", 300);  
 }
 
 
 function sendFunctionToServer() {
-  setCookieForSeconds("scricon_run_function", 
+  setCookieForSeconds("datajson_run_function", 
     "funcname::g_tools.dummyPass++location::inner++mousvarname::statustext++newcontent::nieuwe statustekst", 300);
   finalize();
 }
 
 
 function setMoustachuVar(mousvarjs, contentjs) {
-  setCookieForSeconds("scricon_run_function", 
+  setCookieForSeconds("datajson_run_function", 
     "funcname::g_tools.dummyPass++location::inner++mousvarname::" + mousvarjs + 
     "++newcontent::" + contentjs, 
     300);
@@ -82,7 +82,7 @@ function dropdownname_01_onchange() {
 function dropdownname_03_onchange() {
 // set the realvalue of dd1 when dd3 changes
 
-  setCookieForSeconds("scricon_run_function", 
+  setCookieForSeconds("datajson_run_function", 
     "funcname::g_html_json.setDropDown++location::inner++mousvarname::dropdown1++" + 
     "html-elem-name::dropdownname_01++selected-value::third realvalue++dd-size::1", 
     300);

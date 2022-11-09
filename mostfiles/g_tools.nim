@@ -1,3 +1,8 @@
+#[ 
+  This module contains the functions for the operation of 
+  the cookie-tunnel called at the end of proj.startup.nim. 
+
+]#
 
 
 import tables, strutils, json

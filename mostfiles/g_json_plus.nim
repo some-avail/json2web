@@ -12,8 +12,8 @@ var versionfl: float = 0.2
 
 var filest: string
 # filest = "testedit.json"
-filest = "scricon_gui.json"
-# filest = "test-scricon_gui.json"
+filest = "datajson_gui.json"
+# filest = "test-datajson_gui.json"
 var jnob = parseFile(filest)
 var arrjnob = %*[{"naam":"knakkie", "leeftijd": 89}]
 # var jnob = %*{"naam":"knakkie", "leeftijd": 89, "naam": "bizon"}
