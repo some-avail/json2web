@@ -7,46 +7,29 @@
 <div class="row-main">
   <form id="webbieform" action="/{{project_prefix}}" method="POST" target="{{newtab}}">
     <div class="col-mid">
+      <br>
+      {{{dropdown1}}}<br><br><br>
 
+      <button class="mybuttons" type="button" onclick="butAddNew()">New record</button><br><br>
+      <button class="mybuttons" type="button" onclick="butSave()">Save record</button><br><br>
+      <button class="mybuttons" type="button" onclick="butDelete()">Delete record</button><br><br>
 
-      <div class="mybuttons">      
-        <div class="thisbutton" style="float: left;">
-          <button type="submit" >Post request to local webserver</button>
-        </div>
-        <br><br>
-        <div class="thislink" style="color: {{{linkcolor}}}">
-          <a href="/hello" target="_blank">Spawn new tab with: Hello world</a>
-        </div>
-      </div>
+      <br><br>
+
       
       <div class="mid-top">
+      </div>
         Status: <br>
         {{{statustext}}}<br><br>
-      </div>
 
 
       <div class= "mid-mid">
-        <textarea class = "tbox" name="tbox1" id="tbox1" rows="1">Text to move</textarea>
-        <button type="button" onclick="copyText()">Copy text</button>
-        <textarea class = "tbox" name="tbox2" id="tbox2" rows="1"></textarea>
-        <br><br>
-        <button type="button" onclick="testSetCookie()">Set cookie</button>
-        <button type="button" onclick="sendFunctionToServer()">Send function to server</button>
-
-        <br><br>
-        {{{dropdown1}}}<br><br>
-        {{{dropdown2}}}<br><br>
-        {{{dropdown3}}}<br><br>
-
-        <br><br>
-        {{{radiobuttonset1}}}<br><br>
-        {{{checkboxset1}}}<br><br>
       </div>
     </div>
   </form>
   <div class="col-right">
-    <h4>The values of the controls</h4>
-    (For the dropdowns the hidden real values will be shown, instead of the "show-values")<br><br>
+    <h4>Data-table</h4>
+    <br><br>
     {{{righttext}}}
     <br><br>
     <!-- Sample table:<br><br> -->

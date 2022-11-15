@@ -162,7 +162,7 @@ the server / program#</dia:string>
             <dia:string>#Program reads from the 
 database and/or file-sources
  and then writes
-data to jnob-1#</dia:string>
+data to a copy of jnob-1#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="sans" style="0" name="Helvetica"/>
@@ -232,7 +232,7 @@ data to jnob-1#</dia:string>
             <dia:real val="0.80000000000000004"/>
           </dia:attribute>
           <dia:attribute name="pos">
-            <dia:point val="-13.3091,8.82038"/>
+            <dia:point val="-13.3091,8.82039"/>
           </dia:attribute>
           <dia:attribute name="color">
             <dia:color val="#000000ff"/>

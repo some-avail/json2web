@@ -79,73 +79,26 @@ function dropdownname_01_onchange() {
 }
 
 
-function dropdownname_03_onchange() {
-// set the realvalue of dd1 when dd3 changes
+// function dropdownname_03_onchange() {
+// // set the realvalue of dd1 when dd3 changes
 
-  setCookieForSeconds("datajson_run_function", 
-    "funcname::g_html_json.setDropDown++location::inner++mousvarname::dropdown1++" + 
-    "html-elem-name::dropdownname_01++selected-value::third realvalue++dd-size::1", 
-    300);
-  finalize();
-}
-
-
-function dropdownname_02_onchange() {
-// write selection-change to status-text
-
-  var selectjo = document.getElementById("dropdownname_02");
-  var valuejs = selectjo.options[selectjo.selectedIndex].value;
-  // console.log("bericht is:" + valuejs);
-
-  var messagejs = "From dropdown2, item " + selectjo.selectedIndex + " = " + valuejs;
-
-  setMoustachuVar("statustext", messagejs);
-}
+//   setCookieForSeconds("datajson_run_function", 
+//     "funcname::g_html_json.setDropDown++location::inner++mousvarname::dropdown1++" + 
+//     "html-elem-name::dropdownname_01++selected-value::third realvalue++dd-size::1", 
+//     300);
+//   finalize();
+// }
 
 
-function radiosetexample_onchange(valuejs) {
-// write selection-change to status-text
+// function dropdownname_02_onchange() {
+// // write selection-change to status-text
 
-  switch(valuejs) {
-    case "rbut1":
-      alert("button 1");
-      break;
-    case "rbut2":
-      alert("button 2");
-      break;
-    case "rbut3":
-      alert("button 3");
-      break;
-    default:
-      alert("Error in JavaScript function radiosetexample_onchange");
-    }
-}
+//   var selectjo = document.getElementById("dropdownname_02");
+//   var valuejs = selectjo.options[selectjo.selectedIndex].value;
+//   // console.log("bericht is:" + valuejs);
 
-function check1_onchange()
-{
-  var cboxjo = document.getElementById('id_check1');
-  if (cboxjo.checked == true)
-  {
-    alert("check this one out");
-  }
-}
+//   var messagejs = "From dropdown2, item " + selectjo.selectedIndex + " = " + valuejs;
 
-function check2_onchange()
-{
-  var cboxjo = document.getElementById('id_check2');
-  if (cboxjo.checked == true)
-  {
-    alert("check the second");
-  }
-}
-
-function check3_onchange()
-{
-  var cboxjo = document.getElementById('id_check3');
-  if (cboxjo.checked == true)
-  {
-    alert("check out thrice");
-  }
-}
-
+//   setMoustachuVar("statustext", messagejs);
+// }
 

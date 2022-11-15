@@ -32,6 +32,13 @@ table {
   margin-right: auto;
 }
 
+
+select{
+  padding: 5px 10px;
+  background-color: #008CBA;
+}
+
+
 .row-top {
   color: green;
   background-color:lightsteelblue;
@@ -76,9 +83,20 @@ table {
 }
 
 .mybuttons {
-  width:100%;
-  padding: 10px  
+  border: none;
+  color: white;
+  background-color: #008CBA;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 180px;
+  border-radius: 12px;
   }
+
 
 /* status-gedeelte */
 .mid-top  {
