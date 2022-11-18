@@ -18,3 +18,44 @@
 
 
 ===============================
+
+proc readFromParams_OLD(tablenamest: string, comparetype: Comparetype, 
+                  fieldvaluesq: seq[array[2, string]]): seq[Row] = 
+  #[ Retrieve a sequence of rows based on the 
+    entered parameters. Comparetype-enum see top of file.
+    Call like: readFromParams("mr_data", @[["Weight", "58"]])
+
+    ADAP FUT:
+    - add substring-search
+
+   ]#
+
+
+  #create sql-string
+  var
+    sqlst, whereclausest, comparatorst: string
+    lengthit, countit: int
+    valuesq: seq[string]
+
+  if comparetype == compString:
+    comparatorst = " = ?"
+  elif comparetype == compSubstr:
+    comparatorst = " LIKE '?'"
+
+  lengthit = len(fieldvaluesq)
+  countit = 0
+
+  sqlst = "SELECT * FROM " & tablenamest & " WHERE "
+  for fieldvalar in fieldvaluesq:
+    valuesq.add(fieldvalar[1])
+    countit += 1
+    whereclausest &= fieldvalar[0] & comparatorst
+    if countit < lengthit:
+      whereclausest &= " AND "
+
+  sqlst &= whereclausest
+  echo sqlst
+
+  # get the row-sequence
+  withDb:
+    result = db.getAllRows(sql(sqlst), valuesq)
