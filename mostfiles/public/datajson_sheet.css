@@ -11,6 +11,7 @@
 body {
 /*  background-color: lightgoldenrodyellow;*/
   background-color: beige;
+  /*height: 100vh;*/
 }
 
 textarea {
@@ -41,7 +42,8 @@ select{
 
 .row-top {
   color: green;
-  background-color:lightsteelblue;
+  background-color: yellow;
+  /*background-color:lightsteelblue;*/
   width: 100%;
   height: 3.5%}
 
@@ -49,35 +51,47 @@ select{
 .rtop-left {
   float: left;
   width: 33%;
+  background-color:orange;
   }
 
 
 .rtop-mid {
   float: left;
   width: 33%;
-  font-weight: bold;
+  /*font-weight: bold;*/
+  background-color:red;
   }
   
 
 .rtop-right {
   float: right;
-  width: 33%;    
+  width: 33%;
+  background-color:yellow;
   }
   
 
 
-
 .row-main {
-/*  float: left;*/
   width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  /*overflow: hidden;*/
 }
 
+.col-mid,
+.col-right {
+/*    padding-bottom: 9999px;
+    margin-bottom: -9979px;    
+*/
+  padding: 10px;
+  height: 91vh;
+  overflow: scroll;
+    }
 
 .col-mid {
   float: left;
-  width: 40%;
-  height: 100%;
-  padding: 15px;
+  width: 25%;
 /*  background-color:whitesmoke;*/
   background-color: #bfd9bf;
 }
@@ -86,7 +100,7 @@ select{
   border: none;
   color: white;
   background-color: #008CBA;
-  padding: 15px 32px;
+  padding: 10px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -116,14 +130,16 @@ select{
 /*uitvoer-gedeelte*/
 .col-right {
   float: right;
-  width: 54%;
-  height: 100%;
+  width: 71%;
+  /*height: 100%;*/
   background-color: lightskyblue;
-  padding: 1.5%}
+}
 
 /* Responsive layout - makes the columns stack on top of each other instead of next to each other */
+
 @media screen and (max-width: 600px) {
   .col-mid, .col-right {
     width: 100%;
   }
 }
+

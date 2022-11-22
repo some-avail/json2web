@@ -152,6 +152,36 @@ proc findDoubleKeys(keylistsq: seq[string]): seq[string] =
 
 
 
+proc pruneJnodeFromTree() = 
+  discard
+
+
+
+
+proc graftJObjectToTree*(newkeyst: string, pathtomountpointsq: seq[string], 
+                          adoptivejnob: var JsonNode, orphanjnob: JsonNode) = 
+  #[ Add a new (orphan) jsonnode to an adoptive jsonnode, both of type JObject.
+      Set the path to mountpoint (where to attach) via pathtomountpointsq. 
+      The orphan-jnob must look like: {newkeyst: some-jsonnode, blabla}
+      The adoptive node must be preset outside/ before of the procedure.
+    ]#
+
+
+  adoptivejnob{pathtomountpointsq}.add(newkeyst,orphanjnob[newkeyst])
+  echo pretty (adoptivejnob)
+
+
+proc replaceLastItemOfSeq*(sequencesq: seq[string], newtailest: string): seq[string] =
+
+  var mysq: seq[string]
+  mysq = sequencesq
+
+  if mysq.len > 0:
+    mysq = mysq[0..len(mysq) - 2]
+  mysq.add(newtailest)
+
+  result = mysq
+
 
 when isMainModule:
 
@@ -165,10 +195,15 @@ when isMainModule:
   # listKeysFromNode(jnob, keylistsq)
   # echo keylistsq
   # echo findDoubleKeys(keylistsq)
+  # ===================================
+  #testIter01(jnob)
   # ==========================================
   echo "----------------------------"
-  echo jnob
+  #echo jnob
+  echo "============"
+  var mysq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "basic tables fp"]
 
-  testIter01(jnob)
+  echo replaceLastItemOfSeq(mysq, "d. duck")
+  #graftJObjectToTree("new-table", mysq, true, jnob, %*{"new-table": "is nog klein"})
 
 

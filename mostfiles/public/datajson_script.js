@@ -5,7 +5,10 @@ and run there. Search for cookievaluest in project_startup.nim where the
 pickup starts.
 */
 
-
+function butLoadTable() {
+  // load the table mr_data (for now)
+  
+}
 
 function copyText() {
   // copy text from one textbox to an other

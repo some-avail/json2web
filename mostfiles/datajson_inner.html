@@ -8,8 +8,9 @@
   <form id="webbieform" action="/{{project_prefix}}" method="POST" target="{{newtab}}">
     <div class="col-mid">
       <br>
-      {{{dropdown1}}}<br><br><br>
-
+      {{{dropdown1}}}<br><br>
+      <button class="mybuttons" type="button" onclick="butLoadTable()">Load table</button><br><br>
+      Database operations:<br><br>
       <button class="mybuttons" type="button" onclick="butAddNew()">New record</button><br><br>
       <button class="mybuttons" type="button" onclick="butSave()">Save record</button><br><br>
       <button class="mybuttons" type="button" onclick="butDelete()">Delete record</button><br><br>
@@ -26,14 +27,17 @@
       <div class= "mid-mid">
       </div>
     </div>
+    <div class="col-right">
+      <h4>Data-table</h4>
+      <br><br>
+      {{{righttext}}}
+      <br><br>
+      <!-- Sample table:<br><br> -->
+      {{{table01}}}
+
+
+    </div>
   </form>
-  <div class="col-right">
-    <h4>Data-table</h4>
-    <br><br>
-    {{{righttext}}}
-    <br><br>
-    <!-- Sample table:<br><br> -->
-    {{{table01}}}
-  </div>
+
 </div>
 

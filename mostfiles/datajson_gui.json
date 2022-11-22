@@ -8,7 +8,7 @@
     {
       "p-description": "Project to showcase scripting, events and the cookie-tunnel",
       "p-prefix": "datajson (for database-work thru json)",
-      "p-version": 0.14,
+      "p-version": 0.15,
       "tip-one": "Append abbreviations like fp (first page) to maintain uniqueness of keys",
       "tip-two": "Arrays dont have to be unique (are not searched for keys from the outside)",
       "tip-three": "Dont use hyphens in names of controls or elements; not allowed in JS"
@@ -80,17 +80,16 @@
         "basic tables fp":
         {
           "table_01":
-          [
-            {"theader": ["head01","head02","head03","head04"]},
-            {"tdata":
-              [
-                ["a1","b1","c1","d1"],
-                ["a2","b2","c2","d2"],
-                ["a3","b3","c3","d3"],
-                ["a4","b4","c4","d4"]
-              ]
-            }
-          ]
+          {
+            "theader": ["head01","head02","head03","head04"],
+            "tdata":
+            [
+              ["a1","b1","c1","d1"],
+              ["a2","b2","c2","d2"],
+              ["a3","b3","c3","d3"],
+              ["a4","b4","c4","d4"]
+            ]
+          }
         }
       }
     }        

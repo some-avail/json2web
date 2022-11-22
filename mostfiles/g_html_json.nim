@@ -49,7 +49,6 @@ proc setRadioButtons*(jnob: JsonNode, setnamest, value_selectst:string): string 
 <label for="id_rbut2">this is button two</label><br>
 <input type="radio" id="id_rbut3" name="radio-set-example" onchange="radio-set-example_onchange()" value="rbut3" checked>
 <label for="id_rbut3">and here nr. 3</label><br>
-
    ]#
 
 
@@ -220,7 +219,67 @@ proc setTableBasic*(jnob: JsonNode, tablenamest: string): string =
 
 #[ 
 UNIT INFO:
-Generate code for a table-element,
+Generate html-code for a table-element,
+based on an external json-based gui-def.
+
+
+Sample output:
+<table>
+  <tr>
+    <th>head01</th>
+    <th>head02</th>
+    <th>head03</th>
+    <th>head04</th>
+  </tr>
+  <tr>
+    <td>a1</td>
+    <td>b1</td>
+    <td>c1</td>
+    <td>d1</td>
+  </tr>
+  ...
+</table> 
+ ]#
+
+
+  var
+    table_htmlst: string = ""
+    foundjnob: JsonNode = %*{}
+    headersq, datasq, rowsq: seq[JsonNode] = @[]
+
+  g_json_plus.getDeepNodeFromKey(tablenamest, jnob, foundjnob)
+  
+  # labelst = newlang(foundjnob[0]["ddlab"].getStr())  # translated
+#  var valuelistsq = foundjnob[1]["ddvalues"].getElems()   # values not translated for now
+
+  headersq = foundjnob["theader"].getElems()
+  table_htmlst = "<table>\n  <tr>\n"
+
+  for item in headersq:
+    table_htmlst &= "    <th>" & item.getStr() & "</th>\n"
+
+  table_htmlst &= "  </tr>\n"
+
+  datasq = foundjnob["tdata"].getElems()
+  
+  for row in datasq:
+    rowsq = row.getElems()
+    table_htmlst &= "  <tr>\n"
+    for item in rowsq:
+      # echo item.getStr()
+      table_htmlst &= "    <td>" & item.getStr() & "</td>\n"
+    table_htmlst &= "  </tr>\n"
+
+  table_htmlst &= "</table>\n"
+
+  result = table_htmlst
+
+
+proc Old_setTableBasic*(jnob: JsonNode, tablenamest: string): string = 
+
+#[ 
+UNIT INFO:
+Generate html-code for a table-element,
 based on an external json-based gui-def.
 
 

@@ -34,7 +34,9 @@ ADAP NOW
 
 
 import jester, moustachu, times, json, os, tables
-from datajson_loadjson import nil
+
+import datajson_loadjson, g_db2json, g_json_plus
+#from datajson_loadjson import nil
 from g_html_json import nil
 from g_tools import nil
 
@@ -48,6 +50,8 @@ const
   appnamelongst = "Database thru json"
   appnamesuffikst = " showcase"
   portnumberit = 5170
+
+  firstelems_pathst = @["all web-pages", "first web-page", "web-elements fp"]
 
 
 settings:
@@ -124,12 +128,15 @@ routes:
       outervarob: Context = newContext()   # outer html insertions
       cookievaluest, locationst, mousvarnamest: string
       funcpartsta =  initOrderedTable[string, string]()
+      firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-element"]
 
-
-    # g_static_config.project_prefikst = project_prefikst
-    # g_static_config.setGuiJsonNode()
     var gui_jnob = datajson_loadjson.getGuiJsonNode(project_prefikst)
-    var copyjnob = gui_jnob
+    #var copyjnob = gui_jnob
+
+
+    # for now sua - single user approach
+    if not jsondefta.hasKey("sua"):
+      jsondefta.add("sua", getGuiJsonNode(project_prefikst))
 
 
     innervarob["newtab"] = "_self"
@@ -152,8 +159,12 @@ routes:
 
     innervarob["righttext"] = righttekst
 
-    innervarob["table01"] = g_html_json.setTableBasic(copyjnob, "table_01")
+    firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
+    graftJObjectToTree("mr_data", firstelems_pathsq, jsondefta["sua"], 
+                         createHtmlTableNodeFromDB("mr_data"))
 
+    innervarob["table01"] = g_html_json.setTableBasic(jsondefta["sua"], "mr_data")
+    #innervarob["table01"] = g_html_json.setTableBasic(copyjnob, "table_01")
 
 
     # A server-function may have been called from client-side (browser-javascript) by

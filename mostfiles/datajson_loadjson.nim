@@ -12,14 +12,19 @@
 
 
 
-import json
+import json, tables
 
-var versionfl: float = 0.2
+var versionfl: float = 0.3
+
+# create a table with jnobs, one for every web-app 
+# (futural multi-user-approach)
+var jsondefta* = initTable[string, JsonNode]()
 
 
 
-proc dummyLoad(parjnob: JsonNode): JsonNode = 
+proc publicLoading(parjnob: JsonNode): JsonNode = 
   # custom - load extra public data to the json-object
+  # this is a dummy function for now
   result = parjnob
 
 
@@ -30,7 +35,7 @@ proc getGuiJsonNode*(proj_prefikst: string): JsonNode =
 
   filest = proj_prefikst & "_gui.json"
   jnob = parseFile(filest)
-  secondjnob = dummyLoad(jnob)
+  secondjnob = publicLoading(jnob)
 
   result = secondjnob
 
