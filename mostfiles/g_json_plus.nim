@@ -166,9 +166,9 @@ proc graftJObjectToTree*(newkeyst: string, pathtomountpointsq: seq[string],
       The adoptive node must be preset outside/ before of the procedure.
     ]#
 
-
   adoptivejnob{pathtomountpointsq}.add(newkeyst,orphanjnob[newkeyst])
-  echo pretty (adoptivejnob)
+  #echo pretty (adoptivejnob)
+
 
 
 proc replaceLastItemOfSeq*(sequencesq: seq[string], newtailest: string): seq[string] =

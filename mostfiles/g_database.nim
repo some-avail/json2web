@@ -18,11 +18,15 @@ import std/[
   db_sqlite, 
   strutils]
 
+
 type 
-  Comparetype = enum
+  Comparetype* = enum
     compDoNot
     compString
-    compSubstr
+    compSub
+    compNotString
+    compNotSub
+
 
 var
   debugbo: bool = true
@@ -107,7 +111,6 @@ Purpose STRING, Modelnr TEXT)
   result = field_typesq
 
 
-
 proc readFromParams*(tablenamest: string, fieldsq: seq[string] = @[], 
       comparetype: Comparetype = compDoNot, fieldvaluesq: seq[array[2, string]] = @[],
       ordersq: seq[string] = @[], ordertypest: string = ""): seq[Row] = 
@@ -163,10 +166,16 @@ proc readFromParams*(tablenamest: string, fieldsq: seq[string] = @[],
         whereclausest &= fieldvalar[0] & " = '" & fieldvalar[1] & "'"
         if countit < lengthit:
           whereclausest &= " AND "
-    elif comparetype == compSubstr:
+    elif comparetype == compSub:
       for fieldvalar in fieldvaluesq:
         countit += 1
         whereclausest &= fieldvalar[0] & " LIKE '%" & fieldvalar[1] & "%'"
+        if countit < lengthit:
+          whereclausest &= " AND "
+    elif comparetype == compNotSub:
+      for fieldvalar in fieldvaluesq:
+        countit += 1
+        whereclausest &= fieldvalar[0] & " NOT LIKE '%" & fieldvalar[1] & "%'"
         if countit < lengthit:
           whereclausest &= " AND "
 
@@ -263,7 +272,7 @@ proc deleteFromParams*(tablenamest: string, comparetype: Comparetype = compStrin
       whereclausest &= fieldvalar[0] & " = '" & fieldvalar[1] & "'"
       if countit < lengthit:
         whereclausest &= " AND "
-  elif comparetype == compSubstr:
+  elif comparetype == compSub:
     for fieldvalar in fieldvaluesq:
       countit += 1
       whereclausest &= fieldvalar[0] & " LIKE '%" & fieldvalar[1] & "%'"
@@ -316,7 +325,7 @@ proc updateFromParams*(tablenamest: string, setfieldvaluesq: seq[array[2, string
       whereclausest &= fieldvalar[0] & " = '" & fieldvalar[1] & "'"
       if wcountit < wlengthit:
         whereclausest &= " AND "
-  elif comparetype == compSubstr:
+  elif comparetype == compSub:
     for fieldvalar in wherefieldvaluesq:
       wcountit += 1
       whereclausest &= fieldvalar[0] & " LIKE '%" & fieldvalar[1] & "%'"
@@ -334,12 +343,30 @@ proc updateFromParams*(tablenamest: string, setfieldvaluesq: seq[array[2, string
 
 
 
+proc getAllUserTables*(): seq[string] = 
+  var
+    rawtablesq: seq[Row]
+    tablesq: seq[string] = @[]
+
+  rawtablesq = readFromParams("sqlite_master", @["name"], compNotSub, 
+                              @[["name", "sqlite"]])
+  #echo rawtablesq
+
+  for namesq in rawtablesq:
+    tablesq.add(namesq[0])
+
+  result = tablesq
+
+
+
 when isMainModule:
-  #echo readFromParams("mr_data", comparetype = compString, fieldvaluesq = @[["Weight", "54"]])
+  #echo readFromParams("mr_data")
+  echo "--------------"
+  #echo readFromParams("mr_data", comparetype = compNotSub, fieldvaluesq = @[["Builder", "sung"]])
   # echo readFromParams("mr_data", @["anID", "Droidname"], ordersq = @["anID"], ordertypest = "DESC")
   #echo readFromParams("mr_data", @["Droidname"], ordersq = @["anID"], ordertypest = "DESC")
   #echo readFromParams("mr_data", ordersq = @["Type", "Weight"], ordertypest = "ASC")
-  echo readFromParams("mr_data")
+  #echo readFromParams("mr_data")
   #echo readFromParams("planten")
 
   #addNewFromParams("mr_data", @[["Droidname", "Koid"], ["Type","neutronic"]])
@@ -351,3 +378,4 @@ when isMainModule:
 
   #updateFromParams("mr_data", @[["Date_of_build", "2428-03-25"]], compString, @[["Droidname", "Koid"]])
 
+  echo getAllUserTables()

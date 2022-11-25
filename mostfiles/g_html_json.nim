@@ -159,6 +159,9 @@ a selected value that is to be shown after loading. Lastly with sizeit
 you define the number of visible options in a drop-down list;
 that is 1 for normal dropdown, n for an n-sized picklist.
 
+ADAP HIS:
+-simplified json-def and the slightly (removed unneedy brackets)
+
 
 Sample output:
 <span ><label for="dropdownname_01">Some label:</label></span>
@@ -180,8 +183,8 @@ Sample output:
 
 
   namest = dropdownnamest
-  labelst = newlang(foundjnob[0]["ddlab"].getStr())  # translated
-  var valuelistsq = foundjnob[1]["ddvalues"].getElems()   # values not translated for now
+  labelst = newlang(foundjnob["ddlab"].getStr())  # translated
+  var valuelistsq = foundjnob["ddvalues"].getElems()   # values not translated for now
 
 
   for item in valuelistsq:

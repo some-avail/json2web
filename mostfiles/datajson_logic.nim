@@ -1,6 +1,7 @@
 import std/[db_sqlite, strutils]
 import g_database
 
+#[ Not yet used ]#
 
 
 proc readSomeRecords(): seq[Row] = 

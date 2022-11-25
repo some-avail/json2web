@@ -97,7 +97,7 @@ routes:
 
     innervarob["statustext"] = """Status OK"""
 
-    var gui_jnob = datajson_loadjson.getGuiJsonNode(project_prefikst)
+    var initialjnob = datajson_loadjson.readInitialNode(project_prefikst)
 
     innervarob["newtab"] = "_self"
     outervarob["version"] = $versionfl
@@ -109,9 +109,9 @@ routes:
     outervarob["project_prefix"] = project_prefikst
 
     innervarob["project_prefix"] = project_prefikst  
-    innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", "", 1)
+    innervarob["dropdown1"] = g_html_json.setDropDown(initialjnob, "dropdownname_01", "", 1)
 
-    innervarob["table01"] = g_html_json.setTableBasic(gui_jnob, "table_01")
+    innervarob["table01"] = g_html_json.setTableBasic(initialjnob, "table_01")
 
     resp showPage(innervarob, outervarob)
 
@@ -129,14 +129,14 @@ routes:
       cookievaluest, locationst, mousvarnamest: string
       funcpartsta =  initOrderedTable[string, string]()
       firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-element"]
-
-    var gui_jnob = datajson_loadjson.getGuiJsonNode(project_prefikst)
-    #var copyjnob = gui_jnob
+      storedjnob: JsonNode
 
 
-    # for now sua - single user approach
-    if not jsondefta.hasKey("sua"):
-      jsondefta.add("sua", getGuiJsonNode(project_prefikst))
+    #var initialjnob = datajson_loadjson.readInitialNode(project_prefikst)
+
+
+    # tabID for now is: sua - single user approach
+    storedjnob = readStoredNode("sua", project_prefikst)
 
 
     innervarob["newtab"] = "_self"
@@ -153,17 +153,17 @@ routes:
     innervarob["project_prefix"] = project_prefikst  
     innervarob["linkcolor"] = "red"
 
-    innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "dropdownname_01", 
+    innervarob["dropdown1"] = g_html_json.setDropDown(storedjnob, "dropdownname_01", 
                                                           @"dropdownname_01", 1)
     righttekst = "The value of dropdownname_01 = " & @"dropdownname_01"
 
     innervarob["righttext"] = righttekst
 
     firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
-    graftJObjectToTree("mr_data", firstelems_pathsq, jsondefta["sua"], 
+    graftJObjectToTree("mr_data", firstelems_pathsq, storedjnob, 
                          createHtmlTableNodeFromDB("mr_data"))
 
-    innervarob["table01"] = g_html_json.setTableBasic(jsondefta["sua"], "mr_data")
+    innervarob["table01"] = g_html_json.setTableBasic(storedjnob, "mr_data")
     #innervarob["table01"] = g_html_json.setTableBasic(copyjnob, "table_01")
 
 
@@ -178,11 +178,12 @@ routes:
         mousvarnamest = funcpartsta["mousvarname"]
 
         if locationst == "inner":
-          innervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
+          innervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, storedjnob)
         elif locationst == "outer":
-          outervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
+          outervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, storedjnob)
 
 
+    writeStoredNode("sua", storedjnob)
 
     resp showPage(innervarob, outervarob)
 

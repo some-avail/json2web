@@ -7,7 +7,7 @@ pickup starts.
 
 function butLoadTable() {
   // load the table mr_data (for now)
-  
+  document.forms["webbieform"].submit();  
 }
 
 function copyText() {
