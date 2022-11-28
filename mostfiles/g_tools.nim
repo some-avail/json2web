@@ -50,6 +50,10 @@ proc runFunctionFromClient*(funcPartsta: OrderedTable[string, string], jnob: Jso
   elif funcPartsta["funcname"] == "g_html_json.setDropDown":
     result = g_html_json.setDropDown(jnob, funcPartsta["html-elem-name"], funcPartsta["selected-value"], 
       parseInt(funcPartsta["dd-size"]))
+  elif funcPartsta["funcname"] == "g_html_json.setDropDown":
+    result = g_html_json.setDropDown(jnob, funcPartsta["html-elem-name"], funcPartsta["selected-value"], 
+      parseInt(funcPartsta["dd-size"]))
+
 
 
 

@@ -82,15 +82,29 @@ function dropdownname_01_onchange() {
 }
 
 
-// function dropdownname_03_onchange() {
-// // set the realvalue of dd1 when dd3 changes
+function radiorecord_onchange(valuejs) {
+// write selection-change to status-text
 
-//   setCookieForSeconds("datajson_run_function", 
-//     "funcname::g_html_json.setDropDown++location::inner++mousvarname::dropdown1++" + 
-//     "html-elem-name::dropdownname_01++selected-value::third realvalue++dd-size::1", 
-//     300);
-//   finalize();
-// }
+
+  // setCookieForSeconds("datajson_run_function", 
+  //   "funcname::g_tools.dummyPass++location::inner++mousvarname::" + mousvarjs + 
+  //   "++newcontent::" + contentjs, 
+  //   300);
+  // finalize();
+
+  setMoustachuVar("statustext", valuejs);
+  // alert(valuejs);
+    }
+
+
+
+function All_tables_onchange() {
+// clear input-box values
+  // let elements = document.getElementsByClassName("data-input");
+//  document.getElementsByClassName('data-input')[0].value = "";
+  document.forms["webbieform"].submit();  
+
+}
 
 
 // function dropdownname_02_onchange() {

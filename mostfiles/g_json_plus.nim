@@ -166,7 +166,13 @@ proc graftJObjectToTree*(newkeyst: string, pathtomountpointsq: seq[string],
       The adoptive node must be preset outside/ before of the procedure.
     ]#
 
-  adoptivejnob{pathtomountpointsq}.add(newkeyst,orphanjnob[newkeyst])
+  var temp_pathsq: seq[string]
+  if not adoptivejnob.hasKey(newkeyst):
+    adoptivejnob{pathtomountpointsq}.add(newkeyst,orphanjnob[newkeyst])
+  else:     # overwrite existing subnode
+    temp_pathsq = pathtomountpointsq
+    temp_pathsq.add(newkeyst)
+    adoptivejnob{temp_pathsq} = orphanjnob[newkeyst]
   #echo pretty (adoptivejnob)
 
 

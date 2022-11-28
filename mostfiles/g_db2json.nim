@@ -19,11 +19,12 @@ var
 # Maybe best to use modular vars to balance between an overload of 
 # messages and the need set the var at different places.
 
+
+
 template log(messagest: string) =
   # replacement for echo that is only evaluated when debugbo = true
   if debugbo: 
     echo messagest
-
 
 
 
@@ -69,7 +70,7 @@ proc createHtmlTableNodeFromDB*(db_tablenamest: string): JsonNode =
 
 
 
-proc createDropdownNodeFromDb(dropdownnamest, db_tablenamest: string, fieldpairsq: seq[string], 
+proc createDropdownNodeFromDb*(dropdownnamest, db_tablenamest: string, fieldpairsq: seq[string], 
       mycomparison: Comparetype = compString, fieldvaluesq: seq[array[2, string]] = @[],
       ordersq: seq[string] = @[], ordertypest: string = ""):JsonNode = 
 

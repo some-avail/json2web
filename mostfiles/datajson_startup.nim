@@ -20,7 +20,9 @@ file. When you only read from the files no-problemo but if you write you
 might get problems because of the shared data corruption; that is different 
 threads writing and expecting different data.
 See also the module datajson_loadjson.nim
-Currently --threads :on compiles and runs succesfully.
+Currently --threads :on compiles and runs succesfully no more because of 
+the global variable jsondefta. In the future i might use a database instead 
+of a global var to reenable multi-threading.
 
 
 
@@ -33,9 +35,10 @@ ADAP NOW
 ]#
 
 
-import jester, moustachu, times, json, os, tables
+import jester, moustachu, times, json, os, tables, db_sqlite
 
 import datajson_loadjson, g_db2json, g_json_plus
+import g_database
 #from datajson_loadjson import nil
 from g_html_json import nil
 from g_tools import nil
@@ -109,7 +112,8 @@ routes:
     outervarob["project_prefix"] = project_prefikst
 
     innervarob["project_prefix"] = project_prefikst  
-    innervarob["dropdown1"] = g_html_json.setDropDown(initialjnob, "dropdownname_01", "", 1)
+    #innervarob["dropdown1"] = g_html_json.setDropDown(initialjnob, "dropdownname_01", "", 1)
+    innervarob["dropdown1"] = g_html_json.setDropDown(initialjnob, "All_tables", "", 1)
 
     innervarob["table01"] = g_html_json.setTableBasic(initialjnob, "table_01")
 
@@ -130,9 +134,8 @@ routes:
       funcpartsta =  initOrderedTable[string, string]()
       firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-element"]
       storedjnob: JsonNode
-
-
-    #var initialjnob = datajson_loadjson.readInitialNode(project_prefikst)
+      recordsq: seq[Row] = @[]
+      id_fieldst: string
 
 
     # tabID for now is: sua - single user approach
@@ -153,18 +156,39 @@ routes:
     innervarob["project_prefix"] = project_prefikst  
     innervarob["linkcolor"] = "red"
 
-    innervarob["dropdown1"] = g_html_json.setDropDown(storedjnob, "dropdownname_01", 
-                                                          @"dropdownname_01", 1)
+    innervarob["dropdown1"] = g_html_json.setDropDown(storedjnob, "All_tables", 
+                                                          @"All_tables", 1)
+
     righttekst = "The value of dropdownname_01 = " & @"dropdownname_01"
 
     innervarob["righttext"] = righttekst
 
     firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
-    graftJObjectToTree("mr_data", firstelems_pathsq, storedjnob, 
-                         createHtmlTableNodeFromDB("mr_data"))
+    graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+                         createHtmlTableNodeFromDB(@"All_tables"))
 
-    innervarob["table01"] = g_html_json.setTableBasic(storedjnob, "mr_data")
-    #innervarob["table01"] = g_html_json.setTableBasic(copyjnob, "table_01")
+
+    #echo "+++++++++++++++++++++===="
+    #echo @"All_tables"
+    id_fieldst = getFieldAndTypeList(@"All_tables")[0][0]
+    #echo id_fieldst
+
+    #echo @"radiorecord"
+    if @"radiorecord" == "":
+      innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+    else:
+      recordsq = readFromParams(@"All_tables", @[], compString, @[[id_fieldst, @"radiorecord"]])
+      echo recordsq
+      if len(recordsq) > 0:
+        if len(recordsq[0]) > 0:
+          innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables",
+                                  @"radiorecord" , recordsq[0])
+      else:
+        innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+
+
+    #innervarob["table01"] = g_html_json.setTableBasic(storedjnob, @"All_tables")
+
 
 
     # A server-function may have been called from client-side (browser-javascript) by

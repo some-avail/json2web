@@ -84,8 +84,21 @@
             [
               ["a1","b1","c1","d1"],
               ["a2","b2","c2","d2"],
-              ["a3","b3","c3","d3"],
-              ["a4","b4","c4","d4"]
+              ["a3","b3","c3","d3"]
+            ]
+          }
+        },
+        "input tables fp":
+        {
+          "model-input-table":
+          {
+            "theader": ["head01","head02","head03","head04"],
+            "inputrow": "basic_input",
+            "tdata":
+            [
+              ["a1","b1","c1","d1"],
+              ["a2","b2","c2","d2"],
+              ["a3","b3","c3","d3"]
             ]
           }
         }

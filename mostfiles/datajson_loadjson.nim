@@ -21,13 +21,12 @@
   Futurally i might write the jnob to the database 
   so that the global var can be omitted and 
   multi-threading can be restored.
-  
  ]#
 
 
 
 import json, tables
-#import g_database, g_db2json
+import g_database, g_db2json, g_json_plus
 
 
 var versionfl: float = 0.3
@@ -38,11 +37,22 @@ var versionfl: float = 0.3
 var jsondefta* = initTable[string, JsonNode]()
 
 
+
 proc initialLoading(parjnob: JsonNode): JsonNode = 
   # custom - load extra public data to the json-object
   # this is a dummy function for now
+  var 
+    tablesq: seq[string]
+    firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-elem-type"]
+    newjnob: JsonNode = parjnob
+    
+  firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "dropdowns fp")
+  graftJObjectToTree("All_tables", firstelems_pathsq, newjnob, 
+                    createDropdownNodeFromDb("All_tables", "sqlite_master", @["name", "name"], 
+                        compNotSub, @[["name", "sqlite"]], @["name"], "ASC"))
 
   result = parjnob
+
 
 
 
@@ -63,7 +73,7 @@ proc readStoredNode*(tabIDst, project_prefikst: string): JsonNode =
 
   if not jsondefta.hasKey(tabIDst):
       jsondefta.add(tabIDst, readInitialNode(project_prefikst))
-
+      #echo "====*******========************======="
   result = jsondefta[tabIDst]
 
 

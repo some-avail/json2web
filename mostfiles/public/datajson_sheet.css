@@ -34,6 +34,10 @@ table {
 }
 
 
+input.data-input{
+  width: 95%;
+}
+
 select{
   padding: 5px 10px;
   background-color: #008CBA;

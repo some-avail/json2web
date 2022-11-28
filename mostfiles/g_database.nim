@@ -378,4 +378,10 @@ when isMainModule:
 
   #updateFromParams("mr_data", @[["Date_of_build", "2428-03-25"]], compString, @[["Droidname", "Koid"]])
 
-  echo getAllUserTables()
+  #echo getAllUserTables()
+
+  echo getFieldAndTypeList("mr_data")[0][0]
+    #echo item[0]
+    #echo item[1]
+
+
