@@ -1,14 +1,16 @@
 /*
-Webbie uses a cookie-tunnel to execute code from the server. This means
+Webbie can use a cookie-tunnel to execute code from the server. This means
 that in javascript (client-side) a cookie is set to be picked up by the server
 and run there. Search for cookievaluest in project_startup.nim where the 
 pickup starts.
 */
 
+
 function butLoadTable() {
   // load the table mr_data (for now)
   document.forms["webbieform"].submit();  
 }
+
 
 function copyText() {
   // copy text from one textbox to an other
@@ -35,8 +37,8 @@ function testSetCookie() {
 }
 
 
-function finalize(){
 
+function finalize(){
   const waitmilsecsji = 200
   document.forms["webbieform"].submit();
   // wait some milliseconds for the function to be executed depending on latency
@@ -48,6 +50,7 @@ function finalize(){
   // This is needed because cookie-deletion is insecure
   setCookieForSeconds("datajson_run_function", "DISABLED", 300);  
 }
+
 
 
 function sendFunctionToServer() {
@@ -78,13 +81,12 @@ function dropdownname_01_onchange() {
   var messagejs = "From dropdown1, item " + selectjo.selectedIndex + " = " + valuejs;
 
   setMoustachuVar("statustext", messagejs);
-
 }
+
 
 
 function radiorecord_onchange(valuejs) {
 // write selection-change to status-text
-
 
   // setCookieForSeconds("datajson_run_function", 
   //   "funcname::g_tools.dummyPass++location::inner++mousvarname::" + mousvarjs + 
@@ -103,7 +105,32 @@ function All_tables_onchange() {
   // let elements = document.getElementsByClassName("data-input");
 //  document.getElementsByClassName('data-input')[0].value = "";
   document.forms["webbieform"].submit();  
+}
 
+
+function butSave() {
+  console.log("testing 123");
+  document.getElementsByName("curaction")[0].value = "saving..";
+  document.forms["webbieform"].submit();
+}
+
+
+function butClear() {
+  console.log("testing 123");
+  document.getElementsByName("curaction")[0].value = "clearing..";
+
+  var elems = document.getElementsByClassName("data-input");
+  for (var i=0; i<elems.length; i++) {
+    elems[i].value = "";}
+
+  document.getElementsByName("curaction")[0].value = "idle";  
+  }
+
+
+function butDelete() {
+  console.log("testing 123");
+  document.getElementsByName("curaction")[0].value = "deleting..";
+  document.forms["webbieform"].submit();
 }
 
 

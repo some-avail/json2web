@@ -135,7 +135,9 @@ routes:
       firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-element"]
       storedjnob: JsonNode
       recordsq: seq[Row] = @[]
-      id_fieldst: string
+      id_fieldst, fieldnamest, id_valuest: string
+      colcountit, countit: int
+      savefieldvaluesq: seq[array[2, string]]
 
 
     # tabID for now is: sua - single user approach
@@ -164,11 +166,11 @@ routes:
     innervarob["righttext"] = righttekst
 
     firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
+
+    pruneJnodesFromTree(storedjnob, firstelems_pathsq, getAllUserTables())
     graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
                          createHtmlTableNodeFromDB(@"All_tables"))
 
-
-    #echo "+++++++++++++++++++++===="
     #echo @"All_tables"
     id_fieldst = getFieldAndTypeList(@"All_tables")[0][0]
     #echo id_fieldst
@@ -188,6 +190,48 @@ routes:
 
 
     #innervarob["table01"] = g_html_json.setTableBasic(storedjnob, @"All_tables")
+
+
+    if @"curaction" == "saving.." or @"curaction" == "deleting..":
+      # Reuse the var and overwrite the second field 'type' for the values
+      savefieldvaluesq = getFieldAndTypeList(@"All_tables")
+
+      colcountit = getColumnCount(@"All_tables")
+      for countit in 1..colcountit:
+        fieldnamest = "field_" & $countit
+        if request.params.haskey(fieldnamest):
+          #echo request.params[fieldnamest]
+          #echo @fieldnamest
+
+          if countit == 1:
+            id_valuest = request.params[fieldnamest]
+          else:
+            # Reuse the var and overwrite the second field 'type' for the values
+            savefieldvaluesq[countit - 1][1] = request.params[fieldnamest]
+      #remove the id-field:
+      savefieldvaluesq.delete(0)
+
+
+    if @"curaction" == "saving..":
+      if len(id_valuest) == 0:    # empty-idfield must be new record
+        addNewFromParams(@"All_tables", savefieldvaluesq)
+      else:
+        updateFromParams(@"All_tables", savefieldvaluesq, compString, @[[id_fieldst, id_valuest]])
+
+      # requery including the new record
+      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+                           createHtmlTableNodeFromDB(@"All_tables"))
+      innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+
+
+    if @"curaction" == "deleting..":
+      if len(id_valuest) > 0:    # idfield must present
+        deleteFromParams(@"All_tables", compString, @[[id_fieldst, id_valuest]])
+
+      # requery including the new record
+      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+                           createHtmlTableNodeFromDB(@"All_tables"))
+      innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
 
 
 

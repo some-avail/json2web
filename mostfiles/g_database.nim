@@ -358,6 +358,12 @@ proc getAllUserTables*(): seq[string] =
   result = tablesq
 
 
+proc getColumnCount*(tablenamest: string): int =
+  # get the number of columns of the table
+  result = len(getFieldAndTypeList(tablenamest))
+
+  
+
 
 when isMainModule:
   #echo readFromParams("mr_data")

@@ -10,14 +10,15 @@ import json, tables
 var versionfl: float = 0.2
 
 
-var filest: string
-# filest = "testedit.json"
-filest = "datajson_gui.json"
-# filest = "test-datajson_gui.json"
-var jnob = parseFile(filest)
-var arrjnob = %*[{"naam":"knakkie", "leeftijd": 89}]
-# var jnob = %*{"naam":"knakkie", "leeftijd": 89, "naam": "bizon"}
-var tempjnob: JsonNode = %*{}
+when isMainModule:
+  var filest: string
+  # filest = "testedit.json"
+  filest = "datajson_gui.json"
+  # filest = "test-datajson_gui.json"
+  var jnob = parseFile(filest)
+  var arrjnob = %*[{"naam":"knakkie", "leeftijd": 89}]
+  # var jnob = %*{"naam":"knakkie", "leeftijd": 89, "naam": "bizon"}
+  var tempjnob: JsonNode = %*{}
 
 
 
@@ -83,6 +84,8 @@ proc testDeepNodeFromKey(keyst:string, depthcountit: int = 0,
     echo "Original JsonNode is no JObject, but a ", $jnob.kind
 
 
+
+
 proc getDeepNodeFromKey*(keyst:string, jnob:JsonNode, parfoundjnob:var JsonNode) = 
 
   # Get the node from anywhere in the json-exp of original 
@@ -116,6 +119,7 @@ proc getDeepNodeFromKey*(keyst:string, jnob:JsonNode, parfoundjnob:var JsonNode)
 
 
 
+
 proc listKeysFromNode(jnob:JsonNode, allkeyssq: var seq[string]) =
 
   # -walk thru all keys from a jnob, and put them in allkeyssq
@@ -137,6 +141,7 @@ proc listKeysFromNode(jnob:JsonNode, allkeyssq: var seq[string]) =
 
 
 
+
 proc findDoubleKeys(keylistsq: seq[string]): seq[string] =
 
   # -find the non-unique keys in a keylist and return them as 
@@ -151,9 +156,11 @@ proc findDoubleKeys(keylistsq: seq[string]): seq[string] =
   
 
 
-
-proc pruneJnodeFromTree() = 
-  discard
+proc pruneJnodesFromTree*(treejnob: var JsonNode, pathtoparentsq, 
+                                    siblings_to_prunesq: seq[string]) = 
+  for siblingst in siblings_to_prunesq:
+    if treejnob.hasKey(siblingst):
+      treejnob{pathtoparentsq}.delete(siblingst)
 
 
 
@@ -189,6 +196,7 @@ proc replaceLastItemOfSeq*(sequencesq: seq[string], newtailest: string): seq[str
   result = mysq
 
 
+
 when isMainModule:
 
   # echo tempjnob
@@ -204,12 +212,15 @@ when isMainModule:
   # ===================================
   #testIter01(jnob)
   # ==========================================
-  echo "----------------------------"
-  #echo jnob
-  echo "============"
   var mysq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "basic tables fp"]
 
-  echo replaceLastItemOfSeq(mysq, "d. duck")
+  #echo replaceLastItemOfSeq(mysq, "d. duck")
   #graftJObjectToTree("new-table", mysq, true, jnob, %*{"new-table": "is nog klein"})
+
+  pruneJnodesFromTree(jnob, mysq, @["table_01"])
+  echo "----------------------------"
+  echo pretty(jnob)
+  echo "============"
+
 
 
