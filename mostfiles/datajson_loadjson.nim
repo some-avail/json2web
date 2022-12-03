@@ -45,7 +45,7 @@ proc initialLoading(parjnob: JsonNode): JsonNode =
     tablesq: seq[string]
     firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-elem-type"]
     newjnob: JsonNode = parjnob
-    
+
   firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "dropdowns fp")
   graftJObjectToTree("All_tables", firstelems_pathsq, newjnob, 
                     createDropdownNodeFromDb("All_tables", "sqlite_master", @["name", "name"], 
@@ -81,7 +81,6 @@ proc readStoredNode*(tabIDst, project_prefikst: string): JsonNode =
 proc writeStoredNode*(tabIDst: string, storedjnob: JsonNode) = 
 
   jsondefta[tabIDst] = storedjnob
-
 
 
 

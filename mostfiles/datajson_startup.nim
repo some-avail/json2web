@@ -39,6 +39,7 @@ import jester, moustachu, times, json, os, tables, db_sqlite
 
 import datajson_loadjson, g_db2json, g_json_plus
 import g_database
+import datajson_logic
 #from datajson_loadjson import nil
 from g_html_json import nil
 from g_tools import nil
@@ -124,6 +125,7 @@ routes:
     resp "Hello world"
 
 
+
   post "/datajson":
 
     var
@@ -135,13 +137,23 @@ routes:
       firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-element"]
       storedjnob: JsonNode
       recordsq: seq[Row] = @[]
-      id_fieldst, fieldnamest, id_valuest: string
+      id_fieldst, fieldnamest, id_valuest, id_typest, tabidst: string
       colcountit, countit: int
-      savefieldvaluesq: seq[array[2, string]]
+      fieldtypesq, savefieldvaluesq: seq[array[2, string]]
+
+ 
+    if len(@"tab_ID") == 0:
+      tabidst = genTabId()
+    else:
+      tabidst = @"tab_ID"
 
 
-    # tabID for now is: sua - single user approach
-    storedjnob = readStoredNode("sua", project_prefikst)
+    storedjnob = readStoredNode(tabidst, project_prefikst)
+    innervarob["tab_id"] = tabidst
+
+
+    # tabID formerly was: sua - single user approach
+    #storedjnob = readStoredNode("sua", project_prefikst)
 
 
     innervarob["newtab"] = "_self"
@@ -161,9 +173,8 @@ routes:
     innervarob["dropdown1"] = g_html_json.setDropDown(storedjnob, "All_tables", 
                                                           @"All_tables", 1)
 
-    righttekst = "The value of dropdownname_01 = " & @"dropdownname_01"
-
-    innervarob["righttext"] = righttekst
+    #righttekst = "The value of dropdownname_01 = " & @"dropdownname_01"
+    #innervarob["righttext"] = righttekst
 
     firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
 
@@ -171,9 +182,19 @@ routes:
     graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
                          createHtmlTableNodeFromDB(@"All_tables"))
 
+
     #echo @"All_tables"
-    id_fieldst = getFieldAndTypeList(@"All_tables")[0][0]
+    fieldtypesq = getFieldAndTypeList(@"All_tables")
+    id_fieldst = fieldtypesq[0][0]
+    id_typest = fieldtypesq[0][1]
+    savefieldvaluesq = fieldtypesq
     #echo id_fieldst
+
+
+    if @"curaction" == "loading table..":
+      innervarob["statustext"] = readFromParams("sqlite_master", @["sql"], compString, 
+                                          @[["name", @"All_tables"]])[0][0]
+
 
     #echo @"radiorecord"
     if @"radiorecord" == "":
@@ -193,9 +214,7 @@ routes:
 
 
     if @"curaction" == "saving.." or @"curaction" == "deleting..":
-      # Reuse the var and overwrite the second field 'type' for the values
-      savefieldvaluesq = getFieldAndTypeList(@"All_tables")
-
+      # Reuse the var savefieldvaluesq and overwrite the second field 'type' for the values
       colcountit = getColumnCount(@"All_tables")
       for countit in 1..colcountit:
         fieldnamest = "field_" & $countit
@@ -205,33 +224,63 @@ routes:
 
           if countit == 1:
             id_valuest = request.params[fieldnamest]
-          else:
-            # Reuse the var and overwrite the second field 'type' for the values
-            savefieldvaluesq[countit - 1][1] = request.params[fieldnamest]
-      #remove the id-field:
-      savefieldvaluesq.delete(0)
+
+          # Reuse the var and overwrite the second field 'type' for the values
+          savefieldvaluesq[countit - 1][1] = request.params[fieldnamest]
 
 
     if @"curaction" == "saving..":
-      if len(id_valuest) == 0:    # empty-idfield must be new record
-        addNewFromParams(@"All_tables", savefieldvaluesq)
-      else:
-        updateFromParams(@"All_tables", savefieldvaluesq, compString, @[[id_fieldst, id_valuest]])
 
-      # requery including the new record
-      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
-                           createHtmlTableNodeFromDB(@"All_tables"))
-      innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+      try:
+        if len(id_valuest) == 0:    # empty-idfield 
+          # must become new record if db-generated
+          if getKeyFieldStatus(@"All_tables") == genIntegerByDb:
+            #remove the id-field:
+            savefieldvaluesq.delete(0)
+            addNewFromParams(@"All_tables", savefieldvaluesq)
+          else:
+            innervarob["statustext"] = """Cannot save the record because 
+              the ID-field has been left empty and the ID-value is not 
+              automatically generated for this table."""
+
+        else:   # filled id-field
+          if idValueExists(@"All_tables", id_fieldst, id_valuest):
+            # record exists allready; perform an update of the values only.
+            savefieldvaluesq.delete(0)
+            updateFromParams(@"All_tables", savefieldvaluesq, compString, @[[id_fieldst, id_valuest]])
+          else:     # a new record will be entered with the given id-value
+            # id-data must be kept in var savefieldvaluesq
+
+            addNewFromParams(@"All_tables", savefieldvaluesq)
+
+
+        # requery including the new record
+        graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+                             createHtmlTableNodeFromDB(@"All_tables"))
+        innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+
+
+      except DbError:
+        innervarob["statustext"] = getCurrentExceptionMsg()
+
+
+      except:
+        let errob = getCurrentException()
+        echo "\p******* Unanticipated error ******* \p" 
+        echo repr(errob) & "\p****End exception****\p"
+
 
 
     if @"curaction" == "deleting..":
       if len(id_valuest) > 0:    # idfield must present
         deleteFromParams(@"All_tables", compString, @[[id_fieldst, id_valuest]])
 
-      # requery including the new record
-      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
-                           createHtmlTableNodeFromDB(@"All_tables"))
-      innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+        # requery - deletion gone well?
+        graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+                             createHtmlTableNodeFromDB(@"All_tables"))
+        innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+      else:
+        innervarob["statustext"] = "Only records with ID-field can be deleted.."
 
 
 
@@ -251,7 +300,7 @@ routes:
           outervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, storedjnob)
 
 
-    writeStoredNode("sua", storedjnob)
+    writeStoredNode(tabidst, storedjnob)
 
     resp showPage(innervarob, outervarob)
 

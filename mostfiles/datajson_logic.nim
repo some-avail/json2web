@@ -1,13 +1,18 @@
-import std/[db_sqlite, strutils]
-import g_database
+import std/[random]
 
 #[ Not yet used ]#
 
-
-proc readRecordToInputs(): seq[Row] = 
-  
-  withDb:
-    result = db.getAllRows(sql"SELECT * FROM mr_data WHERE Type = ?", "positronic")
+randomize()
 
 
+proc genTabId*(): string = 
+  # 9 zeros is maximal int size, otherwise use int64
+  let idst = $rand(1000000000)
+  result = idst
+
+
+
+
+when isMainModule:
+  echo genTabId()
 

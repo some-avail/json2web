@@ -6,34 +6,9 @@ pickup starts.
 */
 
 
-function butLoadTable() {
-  // load the table mr_data (for now)
-  document.forms["webbieform"].submit();  
-}
-
-
-function copyText() {
-  // copy text from one textbox to an other
-  document.getElementById('tbox2').value = document.getElementById('tbox1').value;
-  console.log('text copied');
-}
-
-
-function setCookie_old3(cName, cValue, expDays) {
-  let date = new Date();
-  date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000));
-  const expires = "expires=" + date.toUTCString();
-  document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
-}
-
 
 function setCookieForSeconds(cName, cValue, forSeconds) {
   document.cookie = cName + "=" + cValue + ";max-age=" + forSeconds  + "; path=/datajson";
-}
-
-
-function testSetCookie() {
-  setCookieForSeconds("Koekje", "Speculaas", 120);
 }
 
 
@@ -70,40 +45,44 @@ function setMoustachuVar(mousvarjs, contentjs) {
 }
 
 
-function dropdownname_01_onchange() {
+// function dropdownname_01_onchange() {
 
-// write selection-change to status-text
+// // write selection-change to status-text
 
-  var selectjo = document.getElementById("dropdownname_01");
-  var valuejs = selectjo.options[selectjo.selectedIndex].value;
-  // console.log("bericht is:" + valuejs);
+//   var selectjo = document.getElementById("dropdownname_01");
+//   var valuejs = selectjo.options[selectjo.selectedIndex].value;
+//   // console.log("bericht is:" + valuejs);
 
-  var messagejs = "From dropdown1, item " + selectjo.selectedIndex + " = " + valuejs;
+//   var messagejs = "From dropdown1, item " + selectjo.selectedIndex + " = " + valuejs;
 
-  setMoustachuVar("statustext", messagejs);
-}
+//   setMoustachuVar("statustext", messagejs);
+// }
 
 
 
 function radiorecord_onchange(valuejs) {
 // write selection-change to status-text
 
-  // setCookieForSeconds("datajson_run_function", 
-  //   "funcname::g_tools.dummyPass++location::inner++mousvarname::" + mousvarjs + 
-  //   "++newcontent::" + contentjs, 
-  //   300);
-  // finalize();
-
+  document.getElementsByName("curaction")[0].value = "reading rec..";
+  
   setMoustachuVar("statustext", valuejs);
+  // document.getElementsByName("curaction")[0].value = "idle";
   // alert(valuejs);
-    }
+ }
 
 
 
 function All_tables_onchange() {
 // clear input-box values
-  // let elements = document.getElementsByClassName("data-input");
-//  document.getElementsByClassName('data-input')[0].value = "";
+  document.getElementsByName("curaction")[0].value = "loading table..";
+  document.forms["webbieform"].submit(); 
+  // document.getElementsByName("curaction")[0].value = "idle";
+}
+
+
+function butLoadTable() {
+  // load the table mr_data (for now)
+  document.getElementsByName("curaction")[0].value = "loading table..";
   document.forms["webbieform"].submit();  
 }
 

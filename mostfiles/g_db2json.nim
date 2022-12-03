@@ -12,6 +12,9 @@ var
   debugbo: bool = true
   versionfl: float = 0.2
 
+const
+  recordlimit*: int = 500
+
 
 
 # Beware: variable debugbo might be used globally, modularly and procedurally
@@ -54,7 +57,7 @@ proc createHtmlTableNodeFromDB*(db_tablenamest: string): JsonNode =
 
 
   # retrieve the rows from the desired table  
-  rowsq = readFromParams(db_tablenamest)
+  rowsq = readFromParams(db_tablenamest, limit = recordlimit)
   #echo rowsq
 
   for row in rowsq:

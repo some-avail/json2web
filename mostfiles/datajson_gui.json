@@ -75,6 +75,20 @@
               ]
           }
         },
+        "datalists fp":
+        {
+          "my_first_datalist":
+          {
+            "setlabel": "yes",
+            "dl_lab": "Test-label:",
+            "dl_values": 
+              [
+                {"real-value": "echte waarde", "show-value": "getoonde waarde 1"},
+                {"real-value": "tweede waarde", "show-value": "getoonde waarde 2"},
+                {"real-value": "derde waarde", "show-value": "getoonde waarde 3"}
+              ]
+          }
+        },
         "basic tables fp":
         {
           "table_01":

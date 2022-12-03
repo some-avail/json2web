@@ -8,20 +8,23 @@
   <form id="webbieform" action="/{{project_prefix}}" method="POST" target="{{newtab}}">
     <div class="col-mid">
       <br>
+      <textarea name="tab_ID" readonly class="specialfield">{{{tab_id}}}</textarea>
+      <textarea name="curaction" readonly class="specialfield">idle</textarea><br><br>
       {{{dropdown1}}}<br><br>
-      <button class="mybuttons" type="button" onclick="butLoadTable()">Load table</button><br><br>
-      <label>Action:  </label> <textarea name="curaction">idle</textarea><br><br>
-      <button class="mybuttons" type="button" onclick="butClear()">Clear fields</button><br><br>
-      <button class="mybuttons" type="button" onclick="butSave()">Save/add record</button><br><br>
-      <button class="mybuttons" type="button" onclick="butDelete()">Delete record</button><br><br>
+      <center>
+      <button class="mybuttons" type="button" onclick="butLoadTable()">Load table</button><br>
 
-      <br><br>
+      <button class="mybuttons" type="button" onclick="butClear()">Clear fields</button><br>
+      <button class="mybuttons" type="button" onclick="butSave()">Save/add record</button><br>
+      <button class="mybuttons" type="button" onclick="butDelete()">Delete record</button><br><br>
+      </center>
+
+      Status: <br><br>
+      {{{statustext}}}<br><br>
 
       
       <div class="mid-top">
       </div>
-        Status: <br>
-        {{{statustext}}}<br><br>
 
 
       <div class= "mid-mid">
@@ -29,7 +32,6 @@
     </div>
     <div class="col-right">
       <h4>Data-table</h4>
-      <br><br>
       {{{righttext}}}
       <br><br>
       <!-- Sample table:<br><br> -->

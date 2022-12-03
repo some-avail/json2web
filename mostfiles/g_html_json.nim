@@ -26,7 +26,7 @@ from datajson_loadjson import nil
 
 
 var 
-  versionfl = 0.3
+  versionfl = 0.4
 
 
 proc newlang(fromlangst:string):string = 
@@ -377,65 +377,85 @@ Sample output:
 
 
 
-
-proc Old_setTableBasic*(jnob: JsonNode, tablenamest: string): string = 
+proc setDatalist*(jnob: JsonNode, dropdownnamest, selected_valuest: string, 
+                    sizeit: int):string = 
 
 #[ 
 UNIT INFO:
-Generate html-code for a table-element,
-based on an external json-based gui-def.
 
+////UNDER CONSTRUCTION/////ON HOLD///////
+
+Generate code for an input and datalist-element,
+based on an external json-based gui-def.
+In this procedure you can only set one control per call.
+
+
+ADAP HIS:
 
 Sample output:
-<table>
-  <tr>
-    <th>head01</th>
-    <th>head02</th>
-    <th>head03</th>
-    <th>head04</th>
-  </tr>
-  <tr>
-    <td>a1</td>
-    <td>b1</td>
-    <td>c1</td>
-    <td>d1</td>
-  </tr>
-  ...
-</table> 
+
+<label for="mylist">Pick an option:</label>
+<input  list="options" id="mylist" name="mylist" onchange="mylist_onchange"/>
+<datalist id="options">
+  <option value="1">This</option>
+  <option value="2">That</option>
+  <option value="3">Those</option>
+</datalist>
+
+
+Old example of the select-element:
+<span ><label for="dropdownname_01">Some label:</label></span>
+<select id="dropdownname_01" name="dropdownname_01" size="1" onchange="dropdownname_01_onchange">
+<option value="some realvalue">this value is shown</option>
+<option value="second realvalue">second value is shown</option>
+<option value="third realvalue">third value is shown</option>
+</select>
  ]#
 
-
   var
-    table_htmlst: string = ""
-    foundjnob: JsonNode = %*{}
-    headersq, datasq, rowsq: seq[JsonNode] = @[]
+    dropdown_list, dropdown_html: string
+    valIDst, valuest: string
+    namest, labelst: string
 
-  g_json_plus.getDeepNodeFromKey(tablenamest, jnob, foundjnob)
-  
-  # labelst = newlang(foundjnob[0]["ddlab"].getStr())  # translated
-#  var valuelistsq = foundjnob[1]["ddvalues"].getElems()   # values not translated for now
 
-  headersq = foundjnob[0]["theader"].getElems()
-  table_htmlst = "<table>\n  <tr>\n"
+  var foundjnob: JsonNode = %*{}
+  g_json_plus.getDeepNodeFromKey(dropdownnamest, jnob, foundjnob)
 
-  for item in headersq:
-    table_htmlst &= "    <th>" & item.getStr() & "</th>\n"
 
-  table_htmlst &= "  </tr>\n"
+  namest = dropdownnamest
+  labelst = newlang(foundjnob["ddlab"].getStr())  # translated
+  var valuelistsq = foundjnob["ddvalues"].getElems()   # values not translated for now
 
-  datasq = foundjnob[1]["tdata"].getElems()
-  
-  for row in datasq:
-    rowsq = row.getElems()
-    table_htmlst &= "  <tr>\n"
-    for item in rowsq:
-      # echo item.getStr()
-      table_htmlst &= "    <td>" & item.getStr() & "</td>\n"
-    table_htmlst &= "  </tr>\n"
 
-  table_htmlst &= "</table>\n"
+  for item in valuelistsq:
+    valIDst = item["real-value"].getStr()
+    valuest = item["show-value"].getStr()
 
-  result = table_htmlst
+
+    if valIDst == selected_valuest:
+      dropdown_list &= "<option value=\"" & valIDst & "\" selected>" & valuest & "</option>\p"
+    else:
+      dropdown_list &= "<option value=\"" & valIDst & "\">" & valuest & "</option>\p"
+
+
+  dropdown_html = "<span ><label for=\"" & namest & "\">" & labelst & "</label></span>\p"
+  # dropdown_html &= "<select id=\"" & namest & "\" name=\"" & namest & "\">\p"
+  dropdown_html &= "<select id=\"" & namest & "\" name=\"" & namest & "\" size=\"" & 
+                      $sizeit & "\" onchange=\"" & namest & "_onchange()\">\p"
+  dropdown_html &= dropdown_list
+  dropdown_html &= "</select>\p"
+
+
+# <span ><label for="dropdownname_01">Some label:</label></span>
+# <select id="dropdownname_01" name="dropdownname_01" size="1" onchange="dropdownname_01_onchange">
+# <option value="some realvalue">this value is shown</option>
+# <option value="second realvalue">second value is shown</option>
+# <option value="third realvalue">third value is shown</option>
+# </select>
+
+  return dropdown_html
+
+
 
 
 

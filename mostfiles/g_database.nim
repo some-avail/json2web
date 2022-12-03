@@ -21,11 +21,20 @@ import std/[
 
 type 
   Comparetype* = enum
-    compDoNot
     compString
     compSub
     compNotString
     compNotSub
+
+  IdGenerationType* = enum
+    genIntegerByDb
+    genIntegerByHand
+    genStringByHand
+    genIntegerByCode
+    genStringByCode
+    genUnknownByHand
+
+  #Row* = seq[string]
 
 
 var
@@ -90,6 +99,7 @@ Type TEXT, Builder STRING, Date_of_build DATE, Weight REAL, Cost NUMERIC,
 Purpose STRING, Modelnr TEXT)
  ]#
 
+
   var 
     create_stringst, fieldandtypest: string
     fielddatasq, field_elemsq: seq[string]
@@ -111,8 +121,103 @@ Purpose STRING, Modelnr TEXT)
   result = field_typesq
 
 
+
+
+
 proc readFromParams*(tablenamest: string, fieldsq: seq[string] = @[], 
-      comparetype: Comparetype = compDoNot, fieldvaluesq: seq[array[2, string]] = @[],
+      comparetype: Comparetype = compString, fieldvaluesq: seq[array[2, string]] = @[],
+      ordersq: seq[string] = @[], ordertypest: string = "", limit: int = 0): seq[Row] = 
+
+
+  #[ Retrieve a sequence of rows based on the entered parameters. 
+    Comparetype-enum see top of file. 
+    fieldsq = @[]  means empty sequence and return all fields
+    fieldvaluesq = @[] means empty and thus all records are returned
+    ordersq - creating ordered fields
+    ordertypest - ASC or DESC, for ascending or descending
+
+    You can either sequentially enter params without varnames, or when one param
+    is omitted, you must use the varnames in the following ones (var = value).
+    Generally, parameter-omission results in the defaults.
+
+
+    Call like: 
+      readFromParams("mr_data", @[], compString, @[["Weight", "58"]])     > no(=all) fields, one cond.
+      readFromParams("mr_data", @["anID", "Droidname"], compSubstr, @[["Weight", "58"]])
+      readFromParams("mr_data", @[], ordersq = @["Droidname"], ordertypest = "ASC")    > all fields, no conditions, do order
+
+    ADAP HIS:
+    - add substring-search
+    - add an order-option
+
+    ADAP FUT:
+   ]#
+
+  var
+    sqlst, whereclausest, fieldlist, orderlist: string
+    lengthit, countit: int
+
+  # which fields to query
+  if fieldsq.len == 0:
+    sqlst = "SELECT * FROM " & tablenamest
+  elif fieldsq.len == 1:
+    sqlst = "SELECT " & fieldsq[0] & " FROM " & tablenamest
+  else:
+    fieldlist = fieldsq.join(", ")
+    sqlst = "SELECT " & fieldlist & " FROM " & tablenamest
+
+  # prepare the where-clause / row-filter
+  lengthit = len(fieldvaluesq)
+  countit = 0
+
+  if fieldvaluesq.len > 0:
+    sqlst &= " WHERE "
+
+    if comparetype == compString:
+      for fieldvalar in fieldvaluesq:
+        countit += 1
+        whereclausest &= fieldvalar[0] & " = '" & fieldvalar[1] & "'"
+        if countit < lengthit:
+          whereclausest &= " AND "
+    elif comparetype == compSub:
+      for fieldvalar in fieldvaluesq:
+        countit += 1
+        whereclausest &= fieldvalar[0] & " LIKE '%" & fieldvalar[1] & "%'"
+        if countit < lengthit:
+          whereclausest &= " AND "
+    elif comparetype == compNotSub:
+      for fieldvalar in fieldvaluesq:
+        countit += 1
+        whereclausest &= fieldvalar[0] & " NOT LIKE '%" & fieldvalar[1] & "%'"
+        if countit < lengthit:
+          whereclausest &= " AND "
+
+    sqlst &= whereclausest
+ 
+  
+  # prep order-strings
+  if ordersq.len == 1:
+    orderlist = ordersq[0]
+    sqlst &= " ORDER BY " & orderlist & " " & ordertypest
+  elif ordersq.len > 1:
+    orderlist = ordersq.join(", ")
+    sqlst &= " ORDER BY " & orderlist & " " & ordertypest
+
+  # maximize number of returned records
+  if limit != 0:
+    sqlst &= " LIMIT " & $limit
+
+  echo sqlst
+
+  # get the row-sequence
+  withDb:
+    result = db.getAllRows(sql(sqlst))
+
+
+
+
+proc Old_readFromParams*(tablenamest: string, fieldsq: seq[string] = @[], 
+      comparetype: Comparetype = compString, fieldvaluesq: seq[array[2, string]] = @[],
       ordersq: seq[string] = @[], ordertypest: string = ""): seq[Row] = 
 
 
@@ -195,7 +300,6 @@ proc readFromParams*(tablenamest: string, fieldsq: seq[string] = @[],
   # get the row-sequence
   withDb:
     result = db.getAllRows(sql(sqlst))
-
 
 
 proc addNewFromParams*(tablenamest: string, fieldvaluesq: seq[array[2, string]]) =
@@ -358,11 +462,44 @@ proc getAllUserTables*(): seq[string] =
   result = tablesq
 
 
+
+proc rowCount*(tablenamest: string, comparetype: Comparetype = compString, 
+                            fieldvaluesq: seq[array[2, string]] = @[]): int =
+  var allrowsq: seq[Row]
+  allrowsq = readFromParams(tablenamest, @[], comparetype, fieldvaluesq) 
+  result = len(allrowsq)
+
+
+
 proc getColumnCount*(tablenamest: string): int =
   # get the number of columns of the table
   result = len(getFieldAndTypeList(tablenamest))
 
+
+
   
+proc getKeyFieldStatus*(tablenamest: string): IdGenerationType = 
+  var 
+    allrowsq: seq[Row]
+    sqlstringst: string
+
+  allrowsq = readFromParams("sqlite_master", comparetype = compString,
+                                 fieldvaluesq = @[["name", tablenamest]]) 
+  sqlstringst = allrowsq[0][4]
+  if "AUTOINCREMENT" in sqlstringst:
+    result = genIntegerByDb
+  else:
+    result = genUnknownByHand
+
+
+proc idValueExists*(tablenamest, id_fieldst, id_valuest: string): bool =
+  var countit: int
+  countit = rowCount(tablenamest, compString, @[[id_fieldst, id_valuest]])
+  if countit > 0:
+    result = true
+  else:
+    result = false
+
 
 
 when isMainModule:
@@ -386,8 +523,14 @@ when isMainModule:
 
   #echo getAllUserTables()
 
+  #[ 
   echo getFieldAndTypeList("mr_data")[0][0]
     #echo item[0]
     #echo item[1]
+ ]#
 
+  #echo getKeyFieldStatus("vacancies")
+
+  #echo rowCount("mr_data")
+  echo idValueExists("vacancies", "vacID", "5")
 
