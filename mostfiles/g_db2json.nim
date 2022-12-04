@@ -31,7 +31,12 @@ template log(messagest: string) =
 
 
 
-proc createHtmlTableNodeFromDB*(db_tablenamest: string): JsonNode =
+proc createHtmlTableNodeFromDB*(db_tablenamest: string, comparetype: Comparetype = compString, 
+              fieldvaluesq: seq[array[2, string]] = @[], 
+              ordersq: seq[string] = @[], ordertypest: string = ""): JsonNode =
+
+      
+
 
   var
     rowsq: seq[Row]
@@ -57,7 +62,9 @@ proc createHtmlTableNodeFromDB*(db_tablenamest: string): JsonNode =
 
 
   # retrieve the rows from the desired table  
-  rowsq = readFromParams(db_tablenamest, limit = recordlimit)
+  rowsq = readFromParams(db_tablenamest, @[], comparetype, fieldvaluesq, 
+                        ordersq, ordertypest, limit = recordlimit)
+  
   #echo rowsq
 
   for row in rowsq:

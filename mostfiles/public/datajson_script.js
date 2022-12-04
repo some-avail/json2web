@@ -113,6 +113,13 @@ function butDelete() {
 }
 
 
+function butFilter() {
+  console.log("testing 123");
+  document.getElementsByName("curaction")[0].value = "filtering..";
+  document.forms["webbieform"].submit();
+}
+
+
 // function dropdownname_02_onchange() {
 // // write selection-change to status-text
 

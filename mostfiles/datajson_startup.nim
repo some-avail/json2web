@@ -47,7 +47,7 @@ from g_tools import nil
 
 
 const 
-  versionfl:float = 0.2
+  versionfl:float = 0.3
   project_prefikst = "datajson"
   appnamebriefst = "DJ"
   appnamenormalst = "DataJson"
@@ -139,7 +139,7 @@ routes:
       recordsq: seq[Row] = @[]
       id_fieldst, fieldnamest, id_valuest, id_typest, tabidst: string
       colcountit, countit: int
-      fieldtypesq, savefieldvaluesq: seq[array[2, string]]
+      fieldtypesq, fieldvaluesq: seq[array[2, string]]
 
  
     if len(@"tab_ID") == 0:
@@ -178,17 +178,42 @@ routes:
 
     firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
 
+    #delete old table-data from jsonnode
     pruneJnodesFromTree(storedjnob, firstelems_pathsq, getAllUserTables())
-    graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
-                         createHtmlTableNodeFromDB(@"All_tables"))
 
 
     #echo @"All_tables"
     fieldtypesq = getFieldAndTypeList(@"All_tables")
     id_fieldst = fieldtypesq[0][0]
     id_typest = fieldtypesq[0][1]
-    savefieldvaluesq = fieldtypesq
+    fieldvaluesq = fieldtypesq
     #echo id_fieldst
+
+
+    if @"curaction" in ["saving..", "filtering..", "deleting.."]:
+      # Reuse the var fieldvaluesq and overwrite the second field 'type' for the values
+      colcountit = getColumnCount(@"All_tables")
+      for countit in 1..colcountit:
+        fieldnamest = "field_" & $countit
+        if request.params.haskey(fieldnamest):
+          #echo request.params[fieldnamest]
+          #echo @fieldnamest
+
+          if countit == 1:
+            id_valuest = request.params[fieldnamest]
+
+          # Reuse the var and overwrite the second field 'type' for the values
+          fieldvaluesq[countit - 1][1] = request.params[fieldnamest]
+
+
+
+    # table loading starts here
+    if @"curaction" == "filtering..":
+      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+                createHtmlTableNodeFromDB(@"All_tables", compSub, fieldvaluesq))
+    else:
+      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+                         createHtmlTableNodeFromDB(@"All_tables"))
 
 
     if @"curaction" == "loading table..":
@@ -201,32 +226,15 @@ routes:
       innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
     else:
       recordsq = readFromParams(@"All_tables", @[], compString, @[[id_fieldst, @"radiorecord"]])
-      echo recordsq
+      #echo recordsq
       if len(recordsq) > 0:
-        if len(recordsq[0]) > 0:
+        if len(recordsq[0]) > 0:    # the record exist?
           innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables",
                                   @"radiorecord" , recordsq[0])
       else:
         innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
 
 
-    #innervarob["table01"] = g_html_json.setTableBasic(storedjnob, @"All_tables")
-
-
-    if @"curaction" == "saving.." or @"curaction" == "deleting..":
-      # Reuse the var savefieldvaluesq and overwrite the second field 'type' for the values
-      colcountit = getColumnCount(@"All_tables")
-      for countit in 1..colcountit:
-        fieldnamest = "field_" & $countit
-        if request.params.haskey(fieldnamest):
-          #echo request.params[fieldnamest]
-          #echo @fieldnamest
-
-          if countit == 1:
-            id_valuest = request.params[fieldnamest]
-
-          # Reuse the var and overwrite the second field 'type' for the values
-          savefieldvaluesq[countit - 1][1] = request.params[fieldnamest]
 
 
     if @"curaction" == "saving..":
@@ -236,8 +244,8 @@ routes:
           # must become new record if db-generated
           if getKeyFieldStatus(@"All_tables") == genIntegerByDb:
             #remove the id-field:
-            savefieldvaluesq.delete(0)
-            addNewFromParams(@"All_tables", savefieldvaluesq)
+            fieldvaluesq.delete(0)
+            addNewFromParams(@"All_tables", fieldvaluesq)
           else:
             innervarob["statustext"] = """Cannot save the record because 
               the ID-field has been left empty and the ID-value is not 
@@ -246,12 +254,12 @@ routes:
         else:   # filled id-field
           if idValueExists(@"All_tables", id_fieldst, id_valuest):
             # record exists allready; perform an update of the values only.
-            savefieldvaluesq.delete(0)
-            updateFromParams(@"All_tables", savefieldvaluesq, compString, @[[id_fieldst, id_valuest]])
+            fieldvaluesq.delete(0)
+            updateFromParams(@"All_tables", fieldvaluesq, compString, @[[id_fieldst, id_valuest]])
           else:     # a new record will be entered with the given id-value
-            # id-data must be kept in var savefieldvaluesq
+            # id-data must be kept in var fieldvaluesq
 
-            addNewFromParams(@"All_tables", savefieldvaluesq)
+            addNewFromParams(@"All_tables", fieldvaluesq)
 
 
         # requery including the new record
