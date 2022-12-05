@@ -1,7 +1,7 @@
 
 #[ Module-function: 
   This module concerns both the initial json-node
-  and the stored json-node that is / will be bound to a tab-ID.
+  and the stored json-node that is bound to a tab-ID.
 
 
   Initial node:
@@ -14,28 +14,46 @@
   User-data must be loaded from the routes-location
   in project_startup.nim to avoid shared data.
 
-  Stored node:
+  Stored node (in mem or on disk):
   In this all tab-specific changes are stored, so 
-  that the state of the tab's gui is saved. However this 
-  breaks multi-threading because of a global var.
-  Futurally i might write the jnob to the database 
-  so that the global var can be omitted and 
-  multi-threading can be restored.
+  that the state of the tab's gui is saved. 
+  When saved in memory this breaks multi-threading 
+  because of a global var.
+  When saved on disk the global var is omitted and 
+  you can compile with multi-threading.
+
+  The below constant "persisttype" determines the 
+  behaviour.
+
  ]#
 
 
 
-import json, tables
+import json, tables, os
 import g_database, g_db2json, g_json_plus
 
 
+const storednodesdir = "stored_gui_nodes"
+
 var versionfl: float = 0.3
+
+
+
+type
+  PersistModeJson* = enum
+    persistNot        # use only initial node without storage-needs
+    persistInMem
+    persistOnDisk
+
+const persisttype* = persistOnDisk     # see enum above
+
+
 
 # create a table with jnobs, one for every tab
 # (futural multi-user-approach)
 #var jsondefta* {.threadvar.} = initTable[string, JsonNode]()
-var jsondefta* = initTable[string, JsonNode]()
-
+when persisttype == persistInMem:
+  var jsondefta* = initTable[string, JsonNode]()
 
 
 proc initialLoading(parjnob: JsonNode): JsonNode = 
@@ -71,16 +89,34 @@ proc readInitialNode*(proj_prefikst: string): JsonNode =
 
 proc readStoredNode*(tabIDst, project_prefikst: string): JsonNode = 
 
-  if not jsondefta.hasKey(tabIDst):
-      jsondefta.add(tabIDst, readInitialNode(project_prefikst))
-      #echo "====*******========************======="
-  result = jsondefta[tabIDst]
+  var filepathst: string
+
+  when persisttype == persistInMem:
+    if not jsondefta.hasKey(tabIDst):
+        jsondefta.add(tabIDst, readInitialNode(project_prefikst))
+        #echo "====*******========************======="
+    result = jsondefta[tabIDst]
+
+  elif persisttype == persistOnDisk:
+    filepathst = storednodesdir / tabIDst & ".json"
+    if fileExists(filepathst):
+      result = parseFile(filepathst)
+    else:
+      result = readInitialNode(project_prefikst)
 
 
 
 proc writeStoredNode*(tabIDst: string, storedjnob: JsonNode) = 
+  
+  var filepathst: string
 
-  jsondefta[tabIDst] = storedjnob
-
+  when persisttype == persistInMem:
+    # store in table of json-nodes
+    jsondefta[tabIDst] = storedjnob
+  elif persisttype == persistOnDisk:
+    #then serialize with pretty and write to file
+    filepathst = storednodesdir / tabIDst & ".json"
+    writeFile(filepathst, pretty(storedjnob))
+    
 
 

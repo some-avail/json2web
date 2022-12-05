@@ -1,0 +1,500 @@
+{
+  "datajson-webcontrols": {
+    "project-properties": {
+      "p-description": "Project to showcase scripting, events and the cookie-tunnel",
+      "p-prefix": "datajson (for database-work thru json)",
+      "p-version": 0.16,
+      "tip-one": "Append abbreviations like fp (first page) to maintain uniqueness of keys",
+      "tip-two": "Arrays dont have to be unique (are not searched for keys from the outside)",
+      "tip-three": "Dont use hyphens in names of controls or elements; not allowed in JS"
+    }
+  },
+  "all web-pages": {
+    "first web-page": {
+      "web-elements fp": {
+        "radio-button-sets fp": {
+          "radiosetexample": [
+            {
+              "name": "rbut1",
+              "lab": "this is button one",
+              "selected": true
+            },
+            {
+              "name": "rbut2",
+              "lab": "this is button two",
+              "selected": false
+            },
+            {
+              "name": "rbut3",
+              "lab": "and here nr. 3",
+              "selected": false
+            }
+          ],
+          "radiosettwo": [
+            {
+              "name": "rabut1",
+              "lab": "Bouton un",
+              "selected": true
+            },
+            {
+              "name": "rabut2",
+              "lab": "Bouton deux",
+              "selected": false
+            },
+            {
+              "name": "rabut3",
+              "lab": "Bouton trois",
+              "selected": false
+            }
+          ]
+        },
+        "check-box-sets fp": {
+          "checksetexample": [
+            {
+              "name": "check1",
+              "lab": "this is box one",
+              "selected": true
+            },
+            {
+              "name": "check2",
+              "lab": "this is box two",
+              "selected": true
+            },
+            {
+              "name": "check3",
+              "lab": "and here box 3",
+              "selected": false
+            }
+          ],
+          "checksettwo": [
+            {
+              "name": "chk1",
+              "lab": "vinkvakje 1",
+              "selected": true
+            },
+            {
+              "name": "chk2",
+              "lab": "vinkvakje 2",
+              "selected": false
+            },
+            {
+              "name": "chk3",
+              "lab": "vinkvakje 3",
+              "selected": true
+            }
+          ]
+        },
+        "dropdowns fp": {
+          "dropdownname_01": {
+            "ddlab": "Table:",
+            "ddvalues": [
+              {
+                "real-value": "some realvalue",
+                "show-value": "this value is shown"
+              },
+              {
+                "real-value": "second realvalue",
+                "show-value": "second value is shown"
+              },
+              {
+                "real-value": "third realvalue",
+                "show-value": "third value is shown"
+              }
+            ]
+          },
+          "dropdownname_02": {
+            "ddlab": "Drop2:",
+            "ddvalues": [
+              {
+                "real-value": "echte waarde",
+                "show-value": "getoonde waarde 1"
+              },
+              {
+                "real-value": "tweede waarde",
+                "show-value": "getoonde waarde 2"
+              },
+              {
+                "real-value": "derde waarde",
+                "show-value": "getoonde waarde 3"
+              }
+            ]
+          },
+          "All_tables": {
+            "ddlab": "All_tables",
+            "ddvalues": [
+              {
+                "real-value": "mr_data",
+                "show-value": "mr_data"
+              },
+              {
+                "real-value": "plants",
+                "show-value": "plants"
+              },
+              {
+                "real-value": "political_systems",
+                "show-value": "political_systems"
+              },
+              {
+                "real-value": "vacancies",
+                "show-value": "vacancies"
+              }
+            ]
+          }
+        },
+        "datalists fp": {
+          "my_first_datalist": {
+            "setlabel": "yes",
+            "dl_lab": "Test-label:",
+            "dl_values": [
+              {
+                "real-value": "echte waarde",
+                "show-value": "getoonde waarde 1"
+              },
+              {
+                "real-value": "tweede waarde",
+                "show-value": "getoonde waarde 2"
+              },
+              {
+                "real-value": "derde waarde",
+                "show-value": "getoonde waarde 3"
+              }
+            ]
+          }
+        },
+        "basic tables fp": {
+          "table_01": {
+            "theader": [
+              "head01",
+              "head02",
+              "head03",
+              "head04"
+            ],
+            "tdata": [
+              [
+                "a1",
+                "b1",
+                "c1",
+                "d1"
+              ],
+              [
+                "a2",
+                "b2",
+                "c2",
+                "d2"
+              ],
+              [
+                "a3",
+                "b3",
+                "c3",
+                "d3"
+              ]
+            ]
+          },
+          "mr_data": {
+            "theader": [
+              "anID",
+              "Droidname",
+              "Type",
+              "Builder",
+              "Date_of_build",
+              "Weight",
+              "Cost",
+              "Purpose",
+              "Modelnr"
+            ],
+            "tdata": [
+              [
+                "1",
+                "mr. data",
+                "positronic",
+                "Noonien sung",
+                "2022-02-22",
+                "59.0",
+                "5896",
+                "autonomous",
+                "od94r"
+              ],
+              [
+                "2",
+                "lore",
+                "negatronic",
+                "Noonien sung",
+                "2304-02-22",
+                "58.0",
+                "354",
+                "experimental",
+                "ks234"
+              ],
+              [
+                "3",
+                "B4",
+                "positronic",
+                "Noonien sung",
+                "2304-02-22",
+                "58.0",
+                "3453",
+                "assistent",
+                "9345d"
+              ],
+              [
+                "4",
+                "ms. lagrange",
+                "positronic",
+                "kobiashi",
+                "2304-02-22",
+                "54.0",
+                "3456",
+                "companion",
+                "w453"
+              ],
+              [
+                "5",
+                "kiddroid",
+                "positronic",
+                "neru",
+                "2209-11-24",
+                "25.0",
+                "546",
+                "companion",
+                "2432d"
+              ],
+              [
+                "11",
+                "Roberto",
+                "neutronic",
+                "meuka",
+                "",
+                "40.0",
+                "",
+                "",
+                ""
+              ],
+              [
+                "12",
+                "Koid",
+                "neurotic",
+                "facire",
+                "2428-03-25",
+                "",
+                "",
+                "",
+                ""
+              ]
+            ]
+          },
+          "plants": {
+            "theader": [
+              "pID",
+              "plant_name",
+              "flowering_time",
+              "growth_height",
+              "sun_need",
+              "water_need"
+            ],
+            "tdata": [
+              [
+                "1",
+                "roos",
+                "mei-juli",
+                "150.0",
+                "",
+                "fris water"
+              ],
+              [
+                "2",
+                "viooltje",
+                "zomer",
+                "80.0",
+                "middel zon",
+                "middel water"
+              ],
+              [
+                "3",
+                "tulp",
+                "augustus",
+                "345.0",
+                "matig",
+                "middel"
+              ],
+              [
+                "4",
+                "sparreboom",
+                "november",
+                "5545.0",
+                "",
+                ""
+              ],
+              [
+                "8",
+                "cactus",
+                "maart",
+                "100.0",
+                "",
+                ""
+              ],
+              [
+                "12",
+                "madeliefje",
+                "zomer",
+                "",
+                "",
+                ""
+              ]
+            ]
+          },
+          "political_systems": {
+            "theader": [
+              "pol_abbrev",
+              "polsys_name",
+              "intention",
+              "actuality",
+              "evol_stage"
+            ],
+            "tdata": [
+              [
+                "dem",
+                "democracy",
+                "let the people rule",
+                "make the people think they rule",
+                "3"
+              ],
+              [
+                "dict",
+                "dictatorship",
+                "the boss rules",
+                "not allways the boss that rules",
+                "1"
+              ],
+              [
+                "poly",
+                "polyculturalism",
+                "multiple cultures coexist peacefully",
+                "not yet realized",
+                "5"
+              ],
+              [
+                "multi",
+                "multiculturalism",
+                "only one liberal culture may exist",
+                "so actually one culture",
+                "3"
+              ],
+              [
+                "cap",
+                "capitalism",
+                "let the markets rule",
+                "let the rich rule",
+                "2"
+              ],
+              [
+                "cyn",
+                "cynocracy",
+                "let the cynics rule",
+                "they dont trust themselves",
+                "4"
+              ],
+              [
+                "dog",
+                "dogracy",
+                "let the dogs rule",
+                "they eat all the food",
+                "2"
+              ],
+              [
+                "mat",
+                "matriarchy",
+                "let the women rule",
+                "do they all agree?",
+                "3"
+              ],
+              [
+                "komy",
+                "komedocracy",
+                "let the comedians rule",
+                "are they still funny",
+                "4"
+              ]
+            ]
+          },
+          "vacancies": {
+            "theader": [
+              "vacID",
+              "vacancy",
+              "salary",
+              "job_security"
+            ],
+            "tdata": [
+              [
+                "1",
+                "baker",
+                "1500.0",
+                "medium"
+              ],
+              [
+                "3",
+                "general manager",
+                "8000.0",
+                "high"
+              ],
+              [
+                "4",
+                "street sweeper",
+                "100.0",
+                ""
+              ],
+              [
+                "6",
+                "lumberjack",
+                "800.0",
+                ""
+              ],
+              [
+                "8",
+                "roofer of roofs",
+                "1200.0",
+                "low"
+              ],
+              [
+                "22",
+                "customer seduction manager",
+                "",
+                ""
+              ]
+            ]
+          }
+        },
+        "input tables fp (not used currently)": {
+          "model-input-table": {
+            "theader": [
+              "head01",
+              "head02",
+              "head03",
+              "head04"
+            ],
+            "inputrow": "basic_input",
+            "tdata": [
+              [
+                "a1",
+                "b1",
+                "c1",
+                "d1"
+              ],
+              [
+                "a2",
+                "b2",
+                "c2",
+                "d2"
+              ],
+              [
+                "a3",
+                "b3",
+                "c3",
+                "d3"
+              ]
+            ]
+          }
+        }
+      }
+    }
+  }
+}

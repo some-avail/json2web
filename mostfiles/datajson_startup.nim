@@ -47,13 +47,14 @@ from g_tools import nil
 
 
 const 
-  versionfl:float = 0.3
+  versionfl:float = 0.4
   project_prefikst = "datajson"
   appnamebriefst = "DJ"
   appnamenormalst = "DataJson"
   appnamelongst = "Database thru json"
   appnamesuffikst = " showcase"
   portnumberit = 5170
+
 
   firstelems_pathst = @["all web-pages", "first web-page", "web-elements fp"]
 
@@ -135,25 +136,29 @@ routes:
       cookievaluest, locationst, mousvarnamest: string
       funcpartsta =  initOrderedTable[string, string]()
       firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-element"]
-      storedjnob: JsonNode
+      gui_jnob: JsonNode
       recordsq: seq[Row] = @[]
       id_fieldst, fieldnamest, id_valuest, id_typest, tabidst: string
       colcountit, countit: int
       fieldtypesq, fieldvaluesq: seq[array[2, string]]
 
- 
-    if len(@"tab_ID") == 0:
-      tabidst = genTabId()
+
+
+    when persisttype == persistNot:
+      gui_jnob = readInitialNode(project_prefikst)
     else:
-      tabidst = @"tab_ID"
+      if len(@"tab_ID") == 0:
+        tabidst = genTabId()
+      else:
+        tabidst = @"tab_ID"
 
+      gui_jnob = readStoredNode(tabidst, project_prefikst)
+      innervarob["tab_id"] = tabidst
 
-    storedjnob = readStoredNode(tabidst, project_prefikst)
-    innervarob["tab_id"] = tabidst
 
 
     # tabID formerly was: sua - single user approach
-    #storedjnob = readStoredNode("sua", project_prefikst)
+    #gui_jnob = readStoredNode("sua", project_prefikst)
 
 
     innervarob["newtab"] = "_self"
@@ -170,7 +175,8 @@ routes:
     innervarob["project_prefix"] = project_prefikst  
     innervarob["linkcolor"] = "red"
 
-    innervarob["dropdown1"] = g_html_json.setDropDown(storedjnob, "All_tables", 
+    #echo gui_jnob
+    innervarob["dropdown1"] = g_html_json.setDropDown(gui_jnob, "All_tables", 
                                                           @"All_tables", 1)
 
     #righttekst = "The value of dropdownname_01 = " & @"dropdownname_01"
@@ -179,7 +185,7 @@ routes:
     firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
 
     #delete old table-data from jsonnode
-    pruneJnodesFromTree(storedjnob, firstelems_pathsq, getAllUserTables())
+    pruneJnodesFromTree(gui_jnob, firstelems_pathsq, getAllUserTables())
 
 
     #echo @"All_tables"
@@ -209,10 +215,10 @@ routes:
 
     # table loading starts here
     if @"curaction" == "filtering..":
-      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+      graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
                 createHtmlTableNodeFromDB(@"All_tables", compSub, fieldvaluesq))
     else:
-      graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+      graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
                          createHtmlTableNodeFromDB(@"All_tables"))
 
 
@@ -223,16 +229,16 @@ routes:
 
     #echo @"radiorecord"
     if @"radiorecord" == "":
-      innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+      innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
     else:
       recordsq = readFromParams(@"All_tables", @[], compString, @[[id_fieldst, @"radiorecord"]])
       #echo recordsq
       if len(recordsq) > 0:
         if len(recordsq[0]) > 0:    # the record exist?
-          innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables",
+          innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables",
                                   @"radiorecord" , recordsq[0])
       else:
-        innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
 
 
 
@@ -263,9 +269,9 @@ routes:
 
 
         # requery including the new record
-        graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+        graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
                              createHtmlTableNodeFromDB(@"All_tables"))
-        innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
 
 
       except DbError:
@@ -284,9 +290,9 @@ routes:
         deleteFromParams(@"All_tables", compString, @[[id_fieldst, id_valuest]])
 
         # requery - deletion gone well?
-        graftJObjectToTree(@"All_tables", firstelems_pathsq, storedjnob, 
+        graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
                              createHtmlTableNodeFromDB(@"All_tables"))
-        innervarob["table01"] = g_html_json.setTableFromDb(storedjnob, @"All_tables")
+        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
       else:
         innervarob["statustext"] = "Only records with ID-field can be deleted.."
 
@@ -303,12 +309,13 @@ routes:
         mousvarnamest = funcpartsta["mousvarname"]
 
         if locationst == "inner":
-          innervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, storedjnob)
+          innervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
         elif locationst == "outer":
-          outervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, storedjnob)
+          outervarob[mousvarnamest] = g_tools.runFunctionFromClient(funcpartsta, gui_jnob)
 
+    when persisttype != persistNot:
+      writeStoredNode(tabidst, gui_jnob)
 
-    writeStoredNode(tabidst, storedjnob)
 
     resp showPage(innervarob, outervarob)
 
