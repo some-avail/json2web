@@ -64,6 +64,7 @@ proc runFunctionFromClient*(funcPartsta: OrderedTable[string, string], jnob: Jso
 
 
 
+
 when isMainModule:
   var paramst: string = "funcname:g_tools.dummyPass++location:inner++varname:statustext++param1:nieuwe statustekst"
   echo getFuncParts(paramst)

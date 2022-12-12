@@ -18,6 +18,7 @@ import std/[
   db_sqlite, 
   strutils]
 
+import g_templates
 
 type 
   Comparetype* = enum
@@ -59,6 +60,8 @@ proc getDb*: DbConn =
   ## Create a DbConn
   # let filepathst = "/home/bruik/Bureaublad/nimtest.db"
   let filepathst = "/media/OnsSpul/1klein/1joris/k1-onderwerpen/computer/Programmeren/nimtaal/jester/json2web/mostfiles/datajson.db"
+  #let filepathst = "/media/OnsSpul/1klein/1joris/k1-onderwerpen/computer/Programmeren/nimtaal/jester/kjx-srvpc-206.db"  
+  #let filepathst = "/home/bruik/.moonchild productions/pale moon/oq1i83z0.default/places.sqlite"
   open(filepathst, "", "", "")
 
 
@@ -88,35 +91,48 @@ proc convertChars() =
 
 
 proc getFieldAndTypeList*(tablenamest: string): seq[array[2, string]] = 
-  # get fields and types for the desired table from the system-table "sqlite_master"
-  # by means of the create-string.
-  # Limits till now: cannot yet handle spaces or hyphens in field-names
+#[
+  Get fields and types for the desired table from the system-table "sqlite_master"
+  by means of the create-string.
+  Limits till now: cannot yet handle spaces or hyphens in field-names
 
-#[sample-create-string:
+  ADAP NOW:
+  -support parsing of bracketed fields
+
+sample-create-string:
  CREATE TABLE mr_data 
 (anID INTEGER CONSTRAINT auto_inc PRIMARY KEY ASC AUTOINCREMENT, Droidname TEXT UNIQUE, 
 Type TEXT, Builder STRING, Date_of_build DATE, Weight REAL, Cost NUMERIC, 
 Purpose STRING, Modelnr TEXT)
+
  ]#
 
 
   var 
-    create_stringst, fieldandtypest: string
+    create_stringst, fieldandtypest, fieldnamest: string
     fielddatasq, field_elemsq: seq[string]
     field_typesq: seq[array[2, string]]
 
 
   withDb:
     create_stringst = getValue(db, sql"SELECT sql FROM sqlite_master WHERE name = ?", tablenamest)
-    # echo create_stringst
+    #echo create_stringst
   
-  fieldandtypest = create_stringst.split('(')[1]
-  fieldandtypest = fieldandtypest.split(')')[0]
-  fielddatasq = fieldandtypest.split(", ")
+  fieldandtypest = create_stringst.split('(', 1)[1]
+  #fieldandtypest = fieldandtypest.split(')')[0]
+  fieldandtypest = fieldandtypest.strip(chars = {')'})
+  fielddatasq = fieldandtypest.split(",")
+
 
   for fielddata in fielddatasq:
-    field_elemsq = fielddata.split(' ')
-    field_typesq.add([field_elemsq[0],field_elemsq[1]])
+    # firstly strip surrounding spaces and then split on spaces
+    field_elemsq = fielddata.strip().split(' ')
+    fieldnamest = field_elemsq[0]
+
+    # strip possible brackets
+    fieldnamest = fieldnamest.strip(chars = {'[',']'})
+
+    field_typesq.add([fieldnamest,field_elemsq[1]])
 
   result = field_typesq
 
@@ -448,16 +464,18 @@ proc updateFromParams*(tablenamest: string, setfieldvaluesq: seq[array[2, string
 
 
 proc getAllUserTables*(): seq[string] = 
+
   var
     rawtablesq: seq[Row]
     tablesq: seq[string] = @[]
 
-  rawtablesq = readFromParams("sqlite_master", @["name"], compNotSub, 
-                              @[["name", "sqlite"]])
+  rawtablesq = readFromParams("sqlite_master", @["name"], compString, 
+                                    @[["type", "table"]])
   #echo rawtablesq
 
   for namesq in rawtablesq:
-    tablesq.add(namesq[0])
+    if not ("sqlite" in namesq[0]):
+      tablesq.add(namesq[0])
 
   result = tablesq
 
@@ -465,6 +483,8 @@ proc getAllUserTables*(): seq[string] =
 
 proc rowCount*(tablenamest: string, comparetype: Comparetype = compString, 
                             fieldvaluesq: seq[array[2, string]] = @[]): int =
+
+  # get the number of records in the record-set given the criteria
   var allrowsq: seq[Row]
   allrowsq = readFromParams(tablenamest, @[], comparetype, fieldvaluesq) 
   result = len(allrowsq)
@@ -479,6 +499,9 @@ proc getColumnCount*(tablenamest: string): int =
 
   
 proc getKeyFieldStatus*(tablenamest: string): IdGenerationType = 
+  # Determine how the ID-field is generated culminating in the 
+  # enum IdGenerationType (for now only two types supported)
+
   var 
     allrowsq: seq[Row]
     sqlstringst: string
@@ -493,6 +516,7 @@ proc getKeyFieldStatus*(tablenamest: string): IdGenerationType =
 
 
 proc idValueExists*(tablenamest, id_fieldst, id_valuest: string): bool =
+  # Determine if the passed id-value exists for given table
   var countit: int
   countit = rowCount(tablenamest, compString, @[[id_fieldst, id_valuest]])
   if countit > 0:
@@ -521,16 +545,26 @@ when isMainModule:
 
   #updateFromParams("mr_data", @[["Date_of_build", "2428-03-25"]], compString, @[["Droidname", "Koid"]])
 
-  #echo getAllUserTables()
+  echo getAllUserTables()
 
   #[ 
-  echo getFieldAndTypeList("mr_data")[0][0]
-    #echo item[0]
-    #echo item[1]
+  for item in getFieldAndTypeList("PARAMS"):
+    echo item[0]
+    echo item[1]
+    echo "---"
  ]#
+
+#[ 
+  timeThings():
+    var testsq: seq[array[2, string]]
+    testsq = getFieldAndTypeList("PARAMS")
+   ]#
+
+
+  #echo "Time = ", timeStuff(var testsq: seq[array[2, string]] = getFieldAndTypeList("RELATIONS")), " s"
 
   #echo getKeyFieldStatus("vacancies")
 
   #echo rowCount("mr_data")
-  echo idValueExists("vacancies", "vacID", "5")
+  #echo idValueExists("vacancies", "vacID", "5")
 

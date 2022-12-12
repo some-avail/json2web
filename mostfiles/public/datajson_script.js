@@ -74,7 +74,14 @@ function radiorecord_onchange(valuejs) {
 
 function All_tables_onchange() {
 // clear input-box values
-  document.getElementsByName("curaction")[0].value = "loading table..";
+  document.getElementsByName("curaction")[0].value = "new table..";
+  var elems = document.getElementsByClassName("filtering");
+  for (var i=0; i<elems.length; i++) {
+    elems[i].value = "";}
+  var elems = document.getElementsByClassName("data-input");
+  for (var i=0; i<elems.length; i++) {
+    elems[i].value = "";}
+
   document.forms["webbieform"].submit(); 
   // document.getElementsByName("curaction")[0].value = "idle";
 }
@@ -94,7 +101,7 @@ function butSave() {
 }
 
 
-function butClear() {
+function butClearFields() {
   console.log("testing 123");
   document.getElementsByName("curaction")[0].value = "clearing..";
 
@@ -106,18 +113,26 @@ function butClear() {
   }
 
 
+function butClearFilter() {
+  console.log("testing 123");
+  document.getElementsByName("curaction")[0].value = "clearing..";
+
+  var elems = document.getElementsByClassName("filtering");
+  for (var i=0; i<elems.length; i++) {
+    elems[i].value = "";}
+
+  document.getElementsByName("curaction")[0].value = "idle";  
+  }
+
+
+
+
 function butDelete() {
   console.log("testing 123");
   document.getElementsByName("curaction")[0].value = "deleting..";
   document.forms["webbieform"].submit();
 }
 
-
-function butFilter() {
-  console.log("testing 123");
-  document.getElementsByName("curaction")[0].value = "filtering..";
-  document.forms["webbieform"].submit();
-}
 
 
 // function dropdownname_02_onchange() {

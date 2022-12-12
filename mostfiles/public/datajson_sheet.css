@@ -34,7 +34,7 @@ table {
 }
 
 
-input.data-input{
+input.data-input, input.filtering{
   width: 95%;
 }
 

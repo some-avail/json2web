@@ -47,7 +47,7 @@ from g_tools import nil
 
 
 const 
-  versionfl:float = 0.4
+  versionfl:float = 0.5
   project_prefikst = "datajson"
   appnamebriefst = "DJ"
   appnamenormalst = "DataJson"
@@ -138,15 +138,19 @@ routes:
       firstelems_pathsq: seq[string] = @["all web-pages", "first web-page", "web-elements fp", "your-element"]
       gui_jnob: JsonNode
       recordsq: seq[Row] = @[]
-      id_fieldst, fieldnamest, id_valuest, id_typest, tabidst: string
-      colcountit, countit: int
-      fieldtypesq, fieldvaluesq: seq[array[2, string]]
-
+      id_fieldst, fieldnamest, id_valuest, id_typest, tabidst, filternamest, filtervaluest: string
+      colcountit, countit, addcountit: int
+      fieldtypesq, fieldvaluesq, filtersq: seq[array[2, string]] = @[]
+      filtervaluesq: seq[string] = @[]
+      tablechangedbo: bool = false
 
 
     when persisttype == persistNot:
       gui_jnob = readInitialNode(project_prefikst)
     else:
+      when persisttype == persistOnDisk: 
+        if theTimeIsRight():
+          deleteExpiredFromAccessBook()
       if len(@"tab_ID") == 0:
         tabidst = genTabId()
       else:
@@ -155,10 +159,6 @@ routes:
       gui_jnob = readStoredNode(tabidst, project_prefikst)
       innervarob["tab_id"] = tabidst
 
-
-
-    # tabID formerly was: sua - single user approach
-    #gui_jnob = readStoredNode("sua", project_prefikst)
 
 
     innervarob["newtab"] = "_self"
@@ -185,7 +185,8 @@ routes:
     firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "basic tables fp")
 
     #delete old table-data from jsonnode
-    pruneJnodesFromTree(gui_jnob, firstelems_pathsq, getAllUserTables())
+    when persisttype != persistNot:
+      pruneJnodesFromTree(gui_jnob, firstelems_pathsq, getAllUserTables())
 
 
     #echo @"All_tables"
@@ -196,8 +197,43 @@ routes:
     #echo id_fieldst
 
 
-    if @"curaction" in ["saving..", "filtering..", "deleting.."]:
-      # Reuse the var fieldvaluesq and overwrite the second field 'type' for the values
+
+    if @"curaction" == "new table..":
+      innervarob["statustext"] = readFromParams("sqlite_master", @["sql"], compString, 
+                                          @[["name", @"All_tables"]])[0][0]
+      tablechangedbo = true
+
+    echo "~~~~~~~~~~~~~~~"
+    addcountit = 0
+    # Collect filter-values
+    # Reuse the var fieldtypesq and overwrite the second field 'type' for the filter-values
+    if not tablechangedbo:   # only in the second pass when stuff has been created
+      colcountit = getColumnCount(@"All_tables")
+      echo "colcountit: ", colcountit
+      for countit in 1..colcountit:
+        filternamest = "filter_" & $countit
+        if request.params.haskey(filternamest):     # needy for colcount-changes with new table-load
+          filtervaluest = request.params[filternamest]
+
+          if filtervaluest.len > 0:
+            filtersq.add(["",""])
+            filtersq[addcountit][0] = fieldtypesq[countit - 1][0]
+            filtersq[addcountit][1] = filtervaluest
+            addcountit += 1
+
+            #echo filtersq
+            #echo filternamest
+            #echo filtervaluesq
+            #echo "countit: ", countit
+            #echo "addcountit: ", addcountit
+            #echo "============"
+
+            # for the filter-value-persistence also needy
+          filtervaluesq.add(filtervaluest)
+
+
+    if @"curaction" in ["saving..", "deleting.."]:
+      # Reuse the var fieldvaluesq and overwrite the second field 'type' for the data-values
       colcountit = getColumnCount(@"All_tables")
       for countit in 1..colcountit:
         fieldnamest = "field_" & $countit
@@ -214,29 +250,33 @@ routes:
 
 
     # table loading starts here
-    if @"curaction" == "filtering..":
+    if not tablechangedbo:
       graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
-                createHtmlTableNodeFromDB(@"All_tables", compSub, fieldvaluesq))
+                createHtmlTableNodeFromDB(@"All_tables", compSub, filtersq))
     else:
       graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
-                         createHtmlTableNodeFromDB(@"All_tables"))
+                        createHtmlTableNodeFromDB(@"All_tables"))
 
-
-    if @"curaction" == "loading table..":
-      innervarob["statustext"] = readFromParams("sqlite_master", @["sql"], compString, 
-                                          @[["name", @"All_tables"]])[0][0]
 
 
     #echo @"radiorecord"
     if @"radiorecord" == "":
-      innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
+      if not tablechangedbo:
+        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables", 
+                                                          filtersq = filtervaluesq)
+      else:
+        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
     else:
-      recordsq = readFromParams(@"All_tables", @[], compString, @[[id_fieldst, @"radiorecord"]])
-      #echo recordsq
-      if len(recordsq) > 0:
-        if len(recordsq[0]) > 0:    # the record exist?
+      if not tablechangedbo:
+        recordsq = readFromParams(@"All_tables", @[], compString, @[[id_fieldst, @"radiorecord"]])
+        #echo recordsq
+        if len(recordsq) > 0:
+          if len(recordsq[0]) > 0:    # the record exist?
+            innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables",
+                                    @"radiorecord" , recordsq[0], filtervaluesq)
+        else:
           innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables",
-                                  @"radiorecord" , recordsq[0])
+                                                              filtersq = filtervaluesq)
       else:
         innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
 
@@ -270,8 +310,10 @@ routes:
 
         # requery including the new record
         graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
-                             createHtmlTableNodeFromDB(@"All_tables"))
-        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
+                             createHtmlTableNodeFromDB(@"All_tables", compSub, filtersq))
+
+        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables", 
+                                                          filtersq = filtervaluesq)
 
 
       except DbError:
@@ -291,8 +333,9 @@ routes:
 
         # requery - deletion gone well?
         graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
-                             createHtmlTableNodeFromDB(@"All_tables"))
-        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
+                             createHtmlTableNodeFromDB(@"All_tables", compSub, filtersq))
+        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables", 
+                                                            filtersq = filtervaluesq)
       else:
         innervarob["statustext"] = "Only records with ID-field can be deleted.."
 

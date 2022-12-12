@@ -13,7 +13,7 @@ var
   versionfl: float = 0.2
 
 const
-  recordlimit*: int = 500
+  recordlimit*: int = 200
 
 
 
@@ -34,8 +34,6 @@ template log(messagest: string) =
 proc createHtmlTableNodeFromDB*(db_tablenamest: string, comparetype: Comparetype = compString, 
               fieldvaluesq: seq[array[2, string]] = @[], 
               ordersq: seq[string] = @[], ordertypest: string = ""): JsonNode =
-
-      
 
 
   var
