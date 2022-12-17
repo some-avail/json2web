@@ -35,12 +35,20 @@ type
     genStringByCode
     genUnknownByHand
 
+  ViewFieldMethod* = enum
+    viewFullNames       # like table.field01
+    viewPrefixNames     # like ta.field01
+    viewLastNames       # like field01
+    viewAliases         # like alias01 if present, otherwise field01 (from: table.field01 as alias01)
+    viewAuto            # = viewAliases
+
+
   #Row* = seq[string]
 
 
 var
   debugbo: bool = true
-  versionfl: float = 0.2
+  versionfl: float = 0.3
   double_quote_namesbo: bool
 
 
@@ -60,7 +68,7 @@ proc getDb*: DbConn =
   ## Create a DbConn
   # let filepathst = "/home/bruik/Bureaublad/nimtest.db"
   let filepathst = "/media/OnsSpul/1klein/1joris/k1-onderwerpen/computer/Programmeren/nimtaal/jester/json2web/mostfiles/datajson.db"
-  #let filepathst = "/media/OnsSpul/1klein/1joris/k1-onderwerpen/computer/Programmeren/nimtaal/jester/kjx-srvpc-206.db"  
+  #let filepathst = "/media/OnsSpul/1klein/1joris/k1-onderwerpen/computer/Programmeren/nimtaal/jester/kjx-srvpc-206.db"
   #let filepathst = "/home/bruik/.moonchild productions/pale moon/oq1i83z0.default/places.sqlite"
   open(filepathst, "", "", "")
 
@@ -90,10 +98,10 @@ proc convertChars() =
   discard
 
 
-proc getFieldAndTypeList*(tablenamest: string): seq[array[2, string]] = 
+proc old_getFieldAndTypeList*(tablenamest: string): seq[array[2, string]] = 
 #[
   Get fields and types for the desired table from the system-table "sqlite_master"
-  by means of the create-string.
+  by means of the create-string (views not supported here).
   Limits till now: cannot yet handle spaces or hyphens in field-names
 
   ADAP NOW:
@@ -104,11 +112,10 @@ sample-create-string:
 (anID INTEGER CONSTRAINT auto_inc PRIMARY KEY ASC AUTOINCREMENT, Droidname TEXT UNIQUE, 
 Type TEXT, Builder STRING, Date_of_build DATE, Weight REAL, Cost NUMERIC, 
 Purpose STRING, Modelnr TEXT)
-
  ]#
 
 
-  var 
+  var
     create_stringst, fieldandtypest, fieldnamest: string
     fielddatasq, field_elemsq: seq[string]
     field_typesq: seq[array[2, string]]
@@ -136,6 +143,112 @@ Purpose STRING, Modelnr TEXT)
 
   result = field_typesq
 
+
+
+proc getFieldAndTypeList*(tablenamest: string, 
+                viewtype: ViewFieldMethod = viewAuto): seq[array[2, string]] = 
+
+#[
+  Get fields and types for the desired table or view from the system-table "sqlite_master"
+  by means of the create-string.
+  Limits till now: cannot yet handle spaces or hyphens in field-names
+  See the enum ViewFieldMethod on top of module.
+
+  ADAP NOW:
+  - enable the parsing of views
+
+sample-create-string for a table:
+ CREATE TABLE mr_data 
+(anID INTEGER CONSTRAINT auto_inc PRIMARY KEY ASC AUTOINCREMENT, Droidname TEXT UNIQUE, 
+Type TEXT, Builder STRING, Date_of_build DATE, Weight REAL, Cost NUMERIC, 
+Purpose STRING, Modelnr TEXT)
+
+sample for a view:
+CREATE VIEW FDQ_RELATIONS_CHANGE AS
+SELECT Relations.RelID, Relations.Change, Relations.Subject, Relations.Object1, Relations.Relation, Relations.Object2, Relations.Selected
+FROM Relations
+WHERE ((Not (Relations.Change) Is Null))
+ORDER BY Relations.Change
+ ]#
+
+
+  var
+    create_stringst, fieldandtypest, fieldnamest: string
+    fielddatasq, field_elemsq, namesq: seq[string]
+    field_typesq: seq[array[2, string]]
+    myrow: Row
+    itemtypest, itemnamest, item_tblnamest, itemrootpagest, itemsqlst: string
+    producst, stuffst: string
+
+
+  withDb:
+    myrow = getRow(db, sql"SELECT * FROM sqlite_master WHERE name = ?", tablenamest)
+    #echo myrow
+  
+
+  itemtypest = myrow[0]   # table, index or view
+  itemnamest = myrow[1]
+  item_tblnamest = myrow[2]   # table to which item belongs?
+  itemrootpagest = myrow[3]   # ?
+  itemsqlst = myrow[4]        # create-string for the item
+
+  case itemtypest
+  of "table":
+
+    fieldandtypest = itemsqlst.split('(', 1)[1]
+    #fieldandtypest = fieldandtypest.split(')')[0]
+    fieldandtypest = fieldandtypest.strip(chars = {')'})
+    fielddatasq = fieldandtypest.split(',')
+
+
+    for fielddata in fielddatasq:
+      # firstly strip surrounding spaces and then split on spaces
+      field_elemsq = fielddata.strip().split(' ')
+      fieldnamest = field_elemsq[0]
+
+      # strip possible brackets
+      fieldnamest = fieldnamest.strip(chars = {'[',']'})
+
+      field_typesq.add([fieldnamest,field_elemsq[1]])
+
+
+  of "view":
+    producst = itemsqlst.split("SELECT ", 1)[1]
+    producst = producst.split("FROM ", 1)[0]
+    producst = producst.strip()
+    fielddatasq = producst.split(',')
+
+    for fielddata in fielddatasq:
+      # firstly strip surrounding spaces and then split on spaces
+      stuffst = fielddata.strip()
+      echo stuffst
+      case viewtype:
+      of viewAuto, viewAliases:
+          if " AS " in stuffst:
+            stuffst = stuffst.split(" AS ")[1]
+          elif " as " in stuffst:          
+            stuffst = stuffst.split(" as ")[1]
+          elif " As " in stuffst:          
+            stuffst = stuffst.split(" As ")[1]
+          elif " aS " in stuffst:          
+            stuffst = stuffst.split(" aS ")[1]
+          else:
+            if '.' in stuffst:
+              stuffst = stuffst.split('.')[1]
+      of viewFullNames:
+        discard     # allready present in stuffst
+      of viewPrefixNames:
+        if '.' in stuffst:
+          namesq = stuffst.split('.')
+          stuffst = namesq[0][0..1] & "." & namesq[1]
+      of viewLastNames:
+        if '.' in stuffst:
+          stuffst = stuffst.split('.')[1]
+
+      # only field, field-type is set as empty string
+      field_typesq.add([stuffst, ""])
+
+  result = field_typesq
 
 
 
@@ -545,7 +658,7 @@ when isMainModule:
 
   #updateFromParams("mr_data", @[["Date_of_build", "2428-03-25"]], compString, @[["Droidname", "Koid"]])
 
-  echo getAllUserTables()
+  #echo getAllUserTables()
 
   #[ 
   for item in getFieldAndTypeList("PARAMS"):
@@ -561,10 +674,14 @@ when isMainModule:
    ]#
 
 
-  #echo "Time = ", timeStuff(var testsq: seq[array[2, string]] = getFieldAndTypeList("RELATIONS")), " s"
-
   #echo getKeyFieldStatus("vacancies")
 
   #echo rowCount("mr_data")
   #echo idValueExists("vacancies", "vacID", "5")
+
+
+  for item in getFieldAndTypeList("RELATIONS", viewAuto):
+    echo item[0]
+    echo item[1]
+    echo "---"
 

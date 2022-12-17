@@ -38,8 +38,7 @@ ADAP NOW
 import jester, moustachu, times, json, os, tables, db_sqlite
 
 import datajson_loadjson, g_db2json, g_json_plus
-import g_database
-import datajson_logic
+import g_database, datajson_logic, g_templates
 #from datajson_loadjson import nil
 from g_html_json import nil
 from g_tools import nil
@@ -47,14 +46,16 @@ from g_tools import nil
 
 
 const 
-  versionfl:float = 0.5
+  versionfl:float = 0.6
   project_prefikst = "datajson"
   appnamebriefst = "DJ"
   appnamenormalst = "DataJson"
   appnamelongst = "Database thru json"
   appnamesuffikst = " showcase"
   portnumberit = 5170
-
+  # Make sure to get/show all elements that you are referring to, 
+  # or crashes may occur
+  showelems = g_html_json.showEntryFilterRadio
 
   firstelems_pathst = @["all web-pages", "first web-page", "web-elements fp"]
 
@@ -130,7 +131,7 @@ routes:
   post "/datajson":
 
     var
-      statustekst, righttekst:string
+      statustekst, righttekst, tempst:string
       innervarob: Context = newContext()  # inner html insertions
       outervarob: Context = newContext()   # outer html insertions
       cookievaluest, locationst, mousvarnamest: string
@@ -206,7 +207,8 @@ routes:
     echo "~~~~~~~~~~~~~~~"
     addcountit = 0
     # Collect filter-values
-    # Reuse the var fieldtypesq and overwrite the second field 'type' for the filter-values
+    # Sample the var fieldtypesq to create filtersq for the filter-values
+    # to (re)query thru createHtmlTableNodeFromDB
     if not tablechangedbo:   # only in the second pass when stuff has been created
       colcountit = getColumnCount(@"All_tables")
       echo "colcountit: ", colcountit
@@ -228,7 +230,7 @@ routes:
             #echo "addcountit: ", addcountit
             #echo "============"
 
-            # for the filter-value-persistence also needy
+          # also needy for setTable to restore the filter-values
           filtervaluesq.add(filtervaluest)
 
 
@@ -255,30 +257,31 @@ routes:
                 createHtmlTableNodeFromDB(@"All_tables", compSub, filtersq))
     else:
       graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
-                        createHtmlTableNodeFromDB(@"All_tables"))
+                          createHtmlTableNodeFromDB(@"All_tables"))
 
 
 
     #echo @"radiorecord"
     if @"radiorecord" == "":
       if not tablechangedbo:
-        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables", 
-                                                          filtersq = filtervaluesq)
+        innervarob["table01"] = g_html_json.setTableDbOpt(gui_jnob, @"All_tables", 
+                                                         showelems, filtersq = filtervaluesq)
       else:
-        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
+        innervarob["table01"] = g_html_json.setTableDbOpt(gui_jnob, @"All_tables", showelems)
     else:
       if not tablechangedbo:
         recordsq = readFromParams(@"All_tables", @[], compString, @[[id_fieldst, @"radiorecord"]])
         #echo recordsq
         if len(recordsq) > 0:
           if len(recordsq[0]) > 0:    # the record exist?
-            innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables",
+            innervarob["table01"] = g_html_json.setTableDbOpt(gui_jnob, @"All_tables", showelems,
                                     @"radiorecord" , recordsq[0], filtervaluesq)
         else:
-          innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables",
+          innervarob["table01"] = g_html_json.setTableDbOpt(gui_jnob, @"All_tables", showelems, 
                                                               filtersq = filtervaluesq)
       else:
-        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables")
+        innervarob["table01"] = g_html_json.setTableDbOpt(gui_jnob, @"All_tables", showelems)
+
 
 
 
@@ -312,7 +315,7 @@ routes:
         graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
                              createHtmlTableNodeFromDB(@"All_tables", compSub, filtersq))
 
-        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables", 
+        innervarob["table01"] = g_html_json.setTableDbOpt(gui_jnob, @"All_tables", showelems, 
                                                           filtersq = filtervaluesq)
 
 
@@ -334,7 +337,7 @@ routes:
         # requery - deletion gone well?
         graftJObjectToTree(@"All_tables", firstelems_pathsq, gui_jnob, 
                              createHtmlTableNodeFromDB(@"All_tables", compSub, filtersq))
-        innervarob["table01"] = g_html_json.setTableFromDb(gui_jnob, @"All_tables", 
+        innervarob["table01"] = g_html_json.setTableDbOpt(gui_jnob, @"All_tables", showelems, 
                                                             filtersq = filtervaluesq)
       else:
         innervarob["statustext"] = "Only records with ID-field can be deleted.."
@@ -358,7 +361,6 @@ routes:
 
     when persisttype != persistNot:
       writeStoredNode(tabidst, gui_jnob)
-
 
     resp showPage(innervarob, outervarob)
 

@@ -47,7 +47,7 @@ type
     persistInMem
     persistOnDisk
 
-const persisttype* = persistNot     # see enum above
+const persisttype* = persistInMem    # see enum above
 
 
 
@@ -67,9 +67,12 @@ proc initialLoading(parjnob: JsonNode): JsonNode =
     newjnob: JsonNode = parjnob
 
   firstelems_pathsq = replaceLastItemOfSeq(firstelems_pathsq, "dropdowns fp")
+  #graftJObjectToTree("All_tables", firstelems_pathsq, newjnob, 
+  #                  createDropdownNodeFromDb("All_tables", "sqlite_master", @["name", "name"], 
+  #                      compString, @[["type", "table"]], @["name"], "ASC"))
   graftJObjectToTree("All_tables", firstelems_pathsq, newjnob, 
                     createDropdownNodeFromDb("All_tables", "sqlite_master", @["name", "name"], 
-                        compString, @[["type", "table"]], @["name"], "ASC"))
+                        compNotSub, @[["type", "index"],["name", "sqlite"]], @["name"], "ASC"))
 
   result = parjnob
 

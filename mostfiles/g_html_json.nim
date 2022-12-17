@@ -29,6 +29,17 @@ var
   versionfl = 0.5
 
 
+type ShownTableElements* = enum
+  showEntryFilterRadio
+  showEntryRadio
+  showFilterRadio
+  showFilter
+  showRadio
+  showNone
+
+
+
+
 proc newlang(fromlangst:string):string = 
   # temporary dummy proc
   result = fromlangst
@@ -296,8 +307,6 @@ ADAP HIS:
 ADAP NOW:
 
 Sample output:
-
-
  ]#
 
 
@@ -386,6 +395,141 @@ Sample output:
   table_htmlst &= "</table>\n"
 
   result = table_htmlst
+
+
+
+
+
+proc setTableDbOpt*(jnob: JsonNode, tablenamest: string,  
+                    showtype: ShownTableElements, radiocheckst: string = "",
+                    valuesq, filtersq: seq[string] = @[]): string = 
+
+#[ 
+UNIT INFO:
+
+Forth-development of setTableFromDb, but now with options.
+Generate html-code for a table-element with optional elements being
+input, filter and radio boxes.
+Optionally enabling crud-ops. Based on an external json-based gui-def, 
+on which the data-table is grafted by g_db2json-functions.
+The output is optionalized thru enum ShownTableElements (see top module)
+
+
+ADAP HIS:
+
+ADAP NOW:
+
+ADAP FUT:
+
+Sample output:
+ ]#
+
+
+
+  var
+    table_htmlst: string = ""
+    foundjnob: JsonNode = %*{}
+    headersq, datasq, rowsq: seq[JsonNode] = @[]
+    colcountit, rowcountit: int = 1
+    valuest, idst: string
+
+
+  g_json_plus.getDeepNodeFromKey(tablenamest, jnob, foundjnob)
+  
+  # labelst = newlang(foundjnob[0]["ddlab"].getStr())  # translated
+#  var valuelistsq = foundjnob[1]["ddvalues"].getElems()   # values not translated for now
+
+  headersq = foundjnob["theader"].getElems()
+  table_htmlst = "<table>\n  <tr>\n"
+
+  for item in headersq:
+    table_htmlst &= "    <th>" & item.getStr() & "</th>\n"
+
+  table_htmlst &= "  </tr>\n"
+
+
+  # and now the input boxes for data-entry
+  if showtype in [showEntryFilterRadio, showEntryRadio]:
+    table_htmlst &= "  <tr>\n"
+
+    if valuesq != @[]:
+      for item in headersq:
+        table_htmlst &= "    <td><input class=\"data-input\" name=\"field_" & $colcountit & "\" value=\"" & valuesq[colcountit - 1] & "\"></td>\n"
+        colcountit += 1
+    else:
+      for item in headersq:
+        table_htmlst &= "    <td><input class=\"data-input\" name=\"field_" & $colcountit & "\"></td>\n"
+        colcountit += 1
+
+    table_htmlst &= "  </tr>\n"
+
+
+  # and the input boxes for filtering
+  if showtype in [showFilter, showFilterRadio, showEntryFilterRadio]:
+    colcountit = 1    # resetting
+    table_htmlst &= "  <tr>\n"
+
+    if filtersq != @[]:
+      for item in headersq:
+        table_htmlst &= "    <td><input class=\"filtering\" name=\"filter_" & $colcountit & "\" value=\"" & filtersq[colcountit - 1] & "\"></td>\n"
+        colcountit += 1
+    else:
+      for item in headersq:
+        table_htmlst &= "    <td><input class=\"filtering\" name=\"filter_" & $colcountit & "\"></td>\n"
+        colcountit += 1
+
+    table_htmlst &= "  </tr>\n"
+
+
+  datasq = foundjnob["tdata"].getElems()
+  
+
+  # in case radio-buttons
+  if showtype in [showEntryFilterRadio, showEntryRadio, showFilterRadio, showRadio]:
+    for row in datasq:
+      rowsq = row.getElems()
+      table_htmlst &= "  <tr>\n"
+      colcountit = 1
+
+      for item in rowsq:
+        if colcountit == 1:
+          idst = "rbut_" & $rowcountit
+          valuest = item.getStr()
+          if radiocheckst == valuest:    # make it checked
+            table_htmlst &= "    <td><input type=\"radio\" id=\"id_" & idst & 
+                "\" name=\"radiorecord\" onchange=\"radiorecord_onchange(\'" & valuest & 
+                "\')\" value=\"" & valuest & "\" checked>\p"
+          else:
+            table_htmlst &= "    <td><input type=\"radio\" id=\"id_" & idst & 
+                "\" name=\"radiorecord\" onchange=\"radiorecord_onchange(\'" & valuest &
+                 "\')\" value=\"" & valuest & "\" >\p"
+
+          table_htmlst &= "    <label for=\"id_" & idst & "\">" & valuest & "</label></td>\p"
+
+        else:
+          # echo item.getStr()
+          table_htmlst &= "    <td>" & item.getStr() & "</td>\n"
+        colcountit += 1
+
+      table_htmlst &= "  </tr>\n"
+      rowcountit += 1
+
+  else:     # showFilter or showNone (no radio-buttons)
+    for row in datasq:
+      rowsq = row.getElems()
+      table_htmlst &= "  <tr>\n"
+
+      for item in rowsq:
+        # echo item.getStr()
+        table_htmlst &= "    <td>" & item.getStr() & "</td>\n"
+      table_htmlst &= "  </tr>\n"
+
+
+  table_htmlst &= "</table>\n"
+
+  result = table_htmlst
+
+
 
 
 proc OLD_setTableFromDb*(jnob: JsonNode, tablenamest: string, radiocheckst: string = "",
