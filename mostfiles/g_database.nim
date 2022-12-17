@@ -18,7 +18,7 @@ import std/[
   db_sqlite, 
   strutils]
 
-import g_templates
+import g_templates, g_tools
 
 type 
   Comparetype* = enum
@@ -191,6 +191,7 @@ ORDER BY Relations.Change
   item_tblnamest = myrow[2]   # table to which item belongs?
   itemrootpagest = myrow[3]   # ?
   itemsqlst = myrow[4]        # create-string for the item
+  echo itemsqlst
 
   case itemtypest
   of "table":
@@ -213,8 +214,8 @@ ORDER BY Relations.Change
 
 
   of "view":
-    producst = itemsqlst.split("SELECT ", 1)[1]
-    producst = producst.split("FROM ", 1)[0]
+    producst = itemsqlst.split2("SELECT ", 1)[1]
+    producst = producst.split2("FROM ", 1)[0]
     producst = producst.strip()
     fielddatasq = producst.split(',')
 
@@ -225,13 +226,7 @@ ORDER BY Relations.Change
       case viewtype:
       of viewAuto, viewAliases:
           if " AS " in stuffst:
-            stuffst = stuffst.split(" AS ")[1]
-          elif " as " in stuffst:          
-            stuffst = stuffst.split(" as ")[1]
-          elif " As " in stuffst:          
-            stuffst = stuffst.split(" As ")[1]
-          elif " aS " in stuffst:          
-            stuffst = stuffst.split(" aS ")[1]
+            stuffst = stuffst.split2(" AS ")[1]
           else:
             if '.' in stuffst:
               stuffst = stuffst.split('.')[1]
@@ -680,7 +675,7 @@ when isMainModule:
   #echo idValueExists("vacancies", "vacID", "5")
 
 
-  for item in getFieldAndTypeList("RELATIONS", viewAuto):
+  for item in getFieldAndTypeList("vacancies_high_paying", viewAuto):
     echo item[0]
     echo item[1]
     echo "---"

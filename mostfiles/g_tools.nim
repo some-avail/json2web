@@ -55,8 +55,29 @@ proc runFunctionFromClient*(funcPartsta: OrderedTable[string, string], jnob: Jso
       parseInt(funcPartsta["dd-size"]))
 
 
+#func split(s: string; sep: char; maxsplit: int = -1): seq[string] {.....}
+
+proc split2*(st: string, sepst: string, maxsplit: int = -1): seq[string] =
+  # As strutils.split, but liberalizing letter-case for the seperator sepst
+  # Tested are: WORD, word and Word
+
+  var sepsmallst, sepbigst, sepcapst: string
+  
+  sepsmallst = sepst.toLowerAscii()
+  sepbigst = sepst.toUpperAscii()
+  sepcapst = sepsmallst.capitalizeAscii()
 
 
+  if st.contains(sepst):
+    result = split(st, sepst, maxsplit)
+  elif st.contains(sepsmallst):
+    result = split(st, sepsmallst, maxsplit)
+  elif st.contains(sepbigst):
+    result = split(st, sepbigst, maxsplit)
+  elif st.contains(sepcapst):
+    result = split(st, sepcapst, maxsplit)
+
+  
 
 #     "funcname:g_html_json.setDropDown++location:inner++varname:dropdown1++param2:dropdownname_01++param3:third realvalue++param4:1", 60);
 # proc setDropDown*(jnob: JsonNode, dropdownnamest, selected_valuest: string, 
@@ -66,9 +87,10 @@ proc runFunctionFromClient*(funcPartsta: OrderedTable[string, string], jnob: Jso
 
 
 when isMainModule:
-  var paramst: string = "funcname:g_tools.dummyPass++location:inner++varname:statustext++param1:nieuwe statustekst"
-  echo getFuncParts(paramst)
-
+  #var paramst: string = "funcname:g_tools.dummyPass++location:inner++varname:statustext++param1:nieuwe statustekst"
+  #echo getFuncParts(paramst)
 
   # echo getattr("g_tools","dummyPass")("malle pietje")      #transformed into `day1.proc1(input)`
+
+  echo split2("do Select after this", "SELECT")
 
