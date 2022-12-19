@@ -1,6 +1,6 @@
 ## Json2web - Web-element-generator and database-app
 
-![datajson_screen01.png](screenshots/datajson_screen01.png)
+![datajson_screen01.png](mostfiles/screenshots/datajson_screen01.png)
 
 
 ### Introduction
@@ -25,13 +25,13 @@ Common components that are used are jester, moustachu (substitution-engine) and 
 
 Further code-review is forth-coming and will be presented in the wiki.
 
-## Hello
+#### Hello
 The hello-project is allways usefull to show a minimal project, thereby showing the minimal structure needed, on which further functions can be built.
 
-## Controls
+#### Controls
 This project shows the generation of some elaborate controls: select-element/combobox, checkbox and radiobox. A simple element like a button or texarea can be entered in project_inner.html directly; its simpleness makes it unnecessary to generate.  
 
-## Scricon (scripted controls)
+#### Scricon (scripted controls)
 While Controls was a pure server-side approach, in Scricon javascript is used. Scricon is showing:
 - how javascript is used in basic examples, especially event-code.
 - how server-code can be run from javascript thru a technique i call the cookie-tunnel.
@@ -40,7 +40,7 @@ Scricon does not show:
 	- setting a select from javascript. (the cookie-tunnel makes that a lower priority).
 	- setting other controls or elements from javascript.
 
-## Datajson
+#### Datajson
 The latest subproject is Datajson, which is a generalized database-form (based on Sqlite). To repeat: The json-file-technique is usable for databases, because a module can write data from the database to the json-definition-file (g_db2json.nim). In a following pass a html-table-element can be generated from the json-def (in g_html_json.nim). 
 
 The technique to run specific code is based on a textarea-element "curaction" in which the current action is set on basis of an event, like a button-click, and a submit is done. In the relevant route happens something like: if curaction == "save.." then save the record.
