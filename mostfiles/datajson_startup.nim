@@ -20,9 +20,9 @@ file. When you only read from the files no-problemo but if you write you
 might get problems because of the shared data corruption; that is different 
 threads writing and expecting different data.
 See also the module datajson_loadjson.nim
-Currently --threads :on compiles and runs succesfully no more because of 
-the global variable jsondefta. In the future i might use a database instead 
-of a global var to reenable multi-threading.
+Currently --threads :on compiles and runs succesfully depending on the chosen 
+persistence-mode in datajson_loadjson.nim. See that module for further info.
+
 
 
 
