@@ -15,7 +15,8 @@ settings:
 
 
 routes:
-  # type: http://localhost:5151/hello
+  get "/":
+    resp "Type: http://localhost:5151/hello"
   get "/hello":
     resp "Hello world"
 

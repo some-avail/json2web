@@ -98,6 +98,7 @@ proc readStoredNode*(tabIDst, project_prefikst: string): JsonNode =
 
   var filepathst: string
 
+
   when persisttype == persistInMem:
     if not jsondefta.hasKey(tabIDst):
         jsondefta.add(tabIDst, readInitialNode(project_prefikst))
@@ -106,10 +107,14 @@ proc readStoredNode*(tabIDst, project_prefikst: string): JsonNode =
 
   elif persisttype == persistOnDisk:
     filepathst = storednodesdir / tabIDst & ".json"
-    if fileExists(filepathst):
-      result = parseFile(filepathst)
+    if existsOrCreateDir(storednodesdir):
+      if fileExists(filepathst):
+        result = parseFile(filepathst)
+      else:
+        result = readInitialNode(project_prefikst)
     else:
       result = readInitialNode(project_prefikst)
+
 
 
 
@@ -176,7 +181,6 @@ proc writeStoredNode*(tabIDst: string, storedjnob: JsonNode) =
     writeFile(filepathst, pretty(storedjnob))
     updateAccessBook(tabIDst)
     
-
 
 
 

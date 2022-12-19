@@ -191,7 +191,7 @@ ORDER BY Relations.Change
   item_tblnamest = myrow[2]   # table to which item belongs?
   itemrootpagest = myrow[3]   # ?
   itemsqlst = myrow[4]        # create-string for the item
-  echo itemsqlst
+  #echo itemsqlst
 
   case itemtypest
   of "table":
