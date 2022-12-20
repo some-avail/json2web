@@ -204,7 +204,7 @@ routes:
                                           @[["name", @"All_tables"]])[0][0]
       tablechangedbo = true
 
-    echo "~~~~~~~~~~~~~~~"
+    #echo "~~~~~~~~~~~~~~~"
     addcountit = 0
     # Collect filter-values
     # Sample the var fieldtypesq to create filtersq for the filter-values
