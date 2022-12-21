@@ -2,13 +2,11 @@
 
 ![datajson_screen01.png](mostfiles/screenshots/datajson_screen01.png)
 
-<base target="_blank">
+<a href="https://www.youtube.com/watch?v=zSXbifhuZSo&t=600s" target="_blank">For the newbies there is a set of videos that nicely explain nim, jester (and moustachu) and got me up and running..click to view</a>
 
-[For the newbies there is a set of videos that nicely explain nim, jester (and moustachu) and got me up and running..click to view](https://www.youtube.com/watch?v=zSXbifhuZSo&t=600s)
+<a href="https://github.com/some-avail/json2web/wiki" target="_blank">Wiki - click to go there; but read below info first</a>
 
-[Wiki - click to go there; but read below info first](https://github.com/some-avail/json2web/wiki)
-
-[Download the subprojects.zip](https://github.com/some-avail/json2web/releases/tag/j2wzipped_01)
+<a href="https://github.com/some-avail/json2web/releases/tag/j2wzipped_01" target="_blank">Download the subprojects.zip</a>
 
 ### Introduction
 Firstly, Json2web is meant for Nim-programmers, not for end-users. It can be seen as a sample-application or small framework, that a programmer can use as a base to create an end-user-app. Therefore (besides code) no executable releases are delivered, which the programmer is supposed to compile him-/herself.
