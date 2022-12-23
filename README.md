@@ -73,7 +73,8 @@ The technique to run specific code is based on a textarea-element "curaction" in
 	- /public/project_script.js
 	- /stored_gui_nodes/      use dir only when persistOnDisk is chosen
 - try to compile and run the code. When you decide you want to build something based on the code do the following:
-- substitute your own projectname for the project (currently datajson) both in the filenames and for constants and variables in the modules themselves.
+- substitute your own projectname for the project (currently datajson) both in the filenames and for constants and variables and modules in the modules themselves.
+- update the path to the database in g_database.nim
 - try to run it with the new names.
 - look in the latest or earlier subprojects if you need info on certain functionalities.
 
