@@ -56,6 +56,16 @@ The latest project is Datajson, which is a generalized database-form (based on S
 
 The technique to run specific code is based on a textarea-element "curaction" in which the current action is set on basis of an event, like a button-click, and a submit is done. In the relevant route happens something like: if curaction == "save.." then save the record.
 
+### Reformed
+This is a forth-worked version of scricon. The plan was twofold:
+- refactor the code; done
+- test and try multi-threading; suspended or even cancelled.
+
+Related to refactoring the plan was to extract the code from the routes and move it to smaller procedures. To do so the request.params had to be copied to a non-jester structure. Also some other restructing was done.
+
+Multi-threading-testing has been suspended, because jester-maintenance is currently low, and a maintained alternative has been presented: mummy + mummy_utils. These libs can be migrated to, which is (relatively) easy. Also mummy has better multi-threading support. Some examples of migrations of are shown in the new repo json2mummy (forthcoming).
+
+
 
 ### Start your own project
 - install the components thru nimble:

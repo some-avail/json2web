@@ -11,7 +11,6 @@
 body {
 /*  background-color: lightgoldenrodyellow;*/
   background-color: beige;
-  /*height: 100vh;*/
 }
 
 textarea {
@@ -25,8 +24,7 @@ table, th, td {
 }
 
 th, td {
-  padding: 6px;
-  font-size: 12px;
+  padding: 10px;
 }
 
 table {
@@ -34,22 +32,9 @@ table {
   margin-right: auto;
 }
 
-
-input.data-input, input.filtering{
-  width: 95%;
-}
-
-select{
-  padding: 5px 10px;
-  background-color: #008CBA;
-  font-size: 12px;
-}
-
-
 .row-top {
   color: green;
-  background-color: yellow;
-  /*background-color:lightsteelblue;*/
+  background-color:lightsteelblue;
   width: 100%;
   height: 3.5%}
 
@@ -57,78 +42,43 @@ select{
 .rtop-left {
   float: left;
   width: 33%;
-  background-color:orange;
   }
 
 
 .rtop-mid {
   float: left;
   width: 33%;
-  /*font-weight: bold;*/
-  background-color:red;
+  font-weight: bold;
   }
   
 
 .rtop-right {
   float: right;
-  width: 33%;
-  background-color:yellow;
+  width: 33%;    
   }
   
 
 
+
 .row-main {
+/*  float: left;*/
   width: 100%;
-  height: 100%;
-  padding: 0px;
-  margin: 0px;
-  font-size: 14px;
-  /*overflow: hidden;*/
 }
 
-.col-mid,
-.col-right {
-/*    padding-bottom: 9999px;
-    margin-bottom: -9979px;    
-*/
-  padding: 10px;
-  height: 91vh;
-  overflow: scroll;
-    }
 
 .col-mid {
   float: left;
-  width: 25%;
+  width: 40%;
+  height: 100%;
+  padding: 15px;
 /*  background-color:whitesmoke;*/
   background-color: #bfd9bf;
-  font-size: 13px;
 }
-
-.specialfield {
-  background-color: lightgrey;
-  width: 40%;
-  height: 20px;
-  border-radius: 12px;
-  font-size: 12px;
-  padding: 3px;
-}
-
 
 .mybuttons {
-  border: none;
-  color: white;
-  background-color: #008CBA;
-  padding: 9px 14px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
-  margin: 10px auto;
-  cursor: pointer;
-  width: 50%;
-  border-radius: 12px;
+  width:100%;
+  padding: 10px  
   }
-
 
 /* status-gedeelte */
 .mid-top  {
@@ -148,16 +98,14 @@ select{
 /*uitvoer-gedeelte*/
 .col-right {
   float: right;
-  width: 71%;
-  /*height: 100%;*/
+  width: 54%;
+  height: 100%;
   background-color: lightskyblue;
-}
+  padding: 1.5%}
 
 /* Responsive layout - makes the columns stack on top of each other instead of next to each other */
-
 @media screen and (max-width: 600px) {
   .col-mid, .col-right {
     width: 100%;
   }
 }
-
